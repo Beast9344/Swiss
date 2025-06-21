@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useState, use } from "react";
 import { games, seatData } from "@/lib/data"
 import { notFound } from "next/navigation"
 import Image from "next/image"
@@ -13,8 +13,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast";
 
-export default function GamePage({ params }: { params: { gameId: string } }) {
-  const game = games.find(g => g.id === params.gameId)
+export default function GamePage({ params }: { params: any }) {
+  const resolvedParams = use(params);
+  const game = games.find(g => g.id === resolvedParams.gameId)
   const { toast } = useToast();
   const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
 
