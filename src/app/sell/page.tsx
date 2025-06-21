@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -5,15 +6,20 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { games, Game, users } from '@/lib/data';
+import { games, Game, users, tickets, User } from '@/lib/data';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { CheckCircle, AlertCircle } from 'lucide-react';
+import { CheckCircle, AlertCircle, Ticket as TicketIcon } from 'lucide-react';
 import Image from 'next/image';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { cn } from '@/lib/utils';
+
 
 export default function SellPage() {
   const [authState, setAuthState] = useState<'unauthenticated' | 'authenticated'>('unauthenticated');
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [error, setError] = useState('');
   const [selectedGames, setSelectedGames] = useState<Game[]>([]);
   const [showSummary, setShowSummary] = useState(false);
@@ -29,10 +35,18 @@ export default function SellPage() {
     const user = users.find(u => u.email === email && u.password === password);
     
     if (user) {
+      setCurrentUser(user);
       setAuthState('authenticated');
     } else {
       setError('Invalid credentials. Please check your email and password.');
     }
+  };
+
+  const handleLogout = () => {
+    setAuthState('unauthenticated');
+    setCurrentUser(null);
+    setSelectedGames([]);
+    setShowSummary(false);
   };
 
   const handleGameSelect = (game: Game, checked: boolean) => {
@@ -57,7 +71,7 @@ export default function SellPage() {
     event.preventDefault();
     toast({
         title: "Your tickets have been listed!",
-        description: "You will be notified by email when your ticket has been sold.",
+        description: "You can track their status on your dashboard. You will be notified by email when a ticket is sold.",
     });
     // Reset state
     setSelectedGames([]);
@@ -83,36 +97,36 @@ export default function SellPage() {
               <li className="flex gap-4">
                 <div className="flex-shrink-0 h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg">1</div>
                 <div>
-                  <h3 className="font-bold text-lg">Log in with your club's account</h3>
-                  <p className="text-muted-foreground mt-1">Access your club's season ticket by securely logging in through the SeatSwap platform using your club's credentials. (OAuth-style authentication)</p>
+                  <h3 className="font-bold text-lg">Log in with your account</h3>
+                  <p className="text-muted-foreground mt-1">Access your season ticket by securely logging in. Any user with an account can list a ticket for sale.</p>
                 </div>
               </li>
               <li className="flex gap-4">
                  <div className="flex-shrink-0 h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg">2</div>
                 <div>
                   <h3 className="font-bold text-lg">Select the game(s) you cannot attend</h3>
-                  <p className="text-muted-foreground mt-1">View your upcoming games and simply check the ones you'd like to release your seat for.</p>
+                  <p className="text-muted-foreground mt-1">View upcoming games and simply check the ones for which you'd like to sell your ticket.</p>
                 </div>
               </li>
               <li className="flex gap-4">
                  <div className="flex-shrink-0 h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg">3</div>
                 <div>
-                  <h3 className="font-bold text-lg">Confirm your release</h3>
-                  <p className="text-muted-foreground mt-1">Review your selections. By confirming, your ticket will be listed on the platform – but you still retain ownership until someone claims or buys it.</p>
+                  <h3 className="font-bold text-lg">Confirm your listing</h3>
+                  <p className="text-muted-foreground mt-1">Review your selections and enter your payout information. Your ticket will be listed on the platform immediately.</p>
                 </div>
               </li>
-              <li className="flex gap-4">
+               <li className="flex gap-4">
                  <div className="flex-shrink-0 h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg">4</div>
                 <div>
-                  <h3 className="font-bold text-lg">Stay notified</h3>
-                  <p className="text-muted-foreground mt-1">You'll receive a notification as soon as your seat is claimed. At that point, your ticket will be transferred securely to the new fan, and you'll receive a confirmation.</p>
+                  <h3 className="font-bold text-lg">Track your sale</h3>
+                  <p className="text-muted-foreground mt-1">Monitor the status of your listing in your seller dashboard and get notified when it's sold.</p>
                 </div>
               </li>
               <li className="flex gap-4">
                  <div className="flex-shrink-0 h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg">5</div>
                 <div>
                   <h3 className="font-bold text-lg">Receive your payout</h3>
-                  <p className="text-muted-foreground mt-1">Once the game is played, your share of the revenue (e.g. xx% of the ticket price) will be credited to your account or preferred payment method.</p>
+                  <p className="text-muted-foreground mt-1">Once the game is played, your share of the revenue will be credited to your account.</p>
                 </div>
               </li>
             </ol>
@@ -122,7 +136,7 @@ export default function SellPage() {
               <CardHeader>
                 <CardTitle className="font-headline">Login to Sell Tickets</CardTitle>
                 <CardDescription>
-                  Use your account credentials to log in and list your ticket. Any user can sell a ticket. (e.g. john.doe@example.com / password123)
+                  Use your account credentials to log in and list your ticket. Any user with an account can list a ticket for sale. (e.g. john.doe@example.com / password123)
                 </CardDescription>
               </CardHeader>
               <form id="login-form" onSubmit={handleLogin}>
@@ -201,8 +215,20 @@ export default function SellPage() {
      )
   }
 
+  const userTickets = tickets.filter(ticket => ticket.sellerId === currentUser?.id);
+
+  const getBadgeVariant = (status: typeof tickets[0]['status']) => {
+      switch (status) {
+          case 'listed': return 'default';
+          case 'pending': return 'secondary';
+          case 'sold': return 'default';
+          case 'rejected': return 'destructive';
+          default: return 'outline';
+      }
+  };
+
   return (
-    <div className="container mx-auto px-4 md:px-6 py-12 md:py-20">
+    <div className="container mx-auto px-4 md:px-6 py-12 md:py-20 space-y-8">
       <Card className="w-full max-w-4xl mx-auto">
         <CardHeader>
           <CardTitle className="font-headline text-2xl">Sell Your Tickets</CardTitle>
@@ -229,9 +255,60 @@ export default function SellPage() {
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button variant="outline" onClick={() => setAuthState('unauthenticated')}>Logout</Button>
+          <Button variant="outline" onClick={handleLogout}>Logout</Button>
           <Button onClick={handleListTickets} className="ml-auto">List Tickets</Button>
         </CardFooter>
+      </Card>
+
+      <Card className="w-full max-w-4xl mx-auto">
+          <CardHeader>
+              <CardTitle className="font-headline text-2xl flex items-center gap-2"><TicketIcon /> Your Listed Tickets</CardTitle>
+              <CardDescription>Track the status and see payout details for your resale tickets.</CardDescription>
+          </CardHeader>
+          <CardContent>
+              <Table>
+                  <TableHeader>
+                      <TableRow>
+                          <TableHead>Game</TableHead>
+                          <TableHead>Seat</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead className="text-right">Your Payout</TableHead>
+                      </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                      {userTickets.length > 0 ? (
+                          userTickets.map(ticket => {
+                              const game = games.find(g => g.id === ticket.gameId);
+                              // Assuming an 85% payout for the seller
+                              const payout = ticket.price * 0.85; 
+                              return (
+                                  <TableRow key={ticket.id}>
+                                      <TableCell>
+                                          <div className="font-medium">{game ? `${game.teamA} vs ${game.teamB}` : 'N/A'}</div>
+                                          <div className="text-sm text-muted-foreground">{game ? new Date(game.date).toLocaleDateString() : ''}</div>
+                                      </TableCell>
+                                      <TableCell>{`Sec ${ticket.section}, Row ${ticket.row}, Seat ${ticket.seat}`}</TableCell>
+                                      <TableCell>
+                                          <Badge variant={getBadgeVariant(ticket.status)} className={cn({'bg-green-500 text-white': ticket.status === 'sold'})}>
+                                              {ticket.status}
+                                          </Badge>
+                                      </TableCell>
+                                      <TableCell className="text-right font-medium">
+                                          {ticket.status === 'sold' ? `£${payout.toFixed(2)}` : 'Pending'}
+                                      </TableCell>
+                                  </TableRow>
+                              );
+                          })
+                      ) : (
+                          <TableRow>
+                              <TableCell colSpan={4} className="h-24 text-center">
+                                  You haven't listed any tickets for resale yet.
+                              </TableCell>
+                          </TableRow>
+                      )}
+                  </TableBody>
+              </Table>
+          </CardContent>
       </Card>
     </div>
   );
