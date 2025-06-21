@@ -1,10 +1,11 @@
+
 "use client"
 
-import { useState, use } from "react";
+import { useState, use, useRef } from "react";
 import { games, seatData } from "@/lib/data"
 import { notFound } from "next/navigation"
 import Image from "next/image"
-import { CalendarDays, MapPin, Ticket, CreditCard, User as UserIcon, CheckCircle } from "lucide-react"
+import { CalendarDays, MapPin, Ticket, CreditCard, User as UserIcon, CheckCircle, Download } from "lucide-react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import SeatMap, { type Seat } from "@/components/seat-map"
@@ -13,16 +14,24 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import QRCode from "react-qr-code";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+
 
 export default function GamePage({ params }: { params: any }) {
   const resolvedParams = use(params);
   const game = games.find(g => g.id === resolvedParams.gameId)
   const { toast } = useToast();
+  
   const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('card');
+  const [purchaseComplete, setPurchaseComplete] = useState(false);
+  const [receiptData, setReceiptData] = useState<any>(null);
+  const receiptRef = useRef<HTMLDivElement>(null);
 
 
   if (!game) {
@@ -47,13 +56,40 @@ export default function GamePage({ params }: { params: any }) {
       return;
     }
 
-    // In a real app, you would add more validation for payment details here.
+    const receiptDetails = {
+      game,
+      seat: selectedSeat,
+      user: { fullName, email },
+      purchaseDate: new Date().toISOString(),
+      total: (selectedSeat.price * 1.1).toFixed(2),
+    };
+
+    setReceiptData(receiptDetails);
+    setPurchaseComplete(true);
 
     toast({
       title: "Purchase Successful!",
-      description: `Thank you, ${fullName}. Your ticket for seat ${selectedSeat.section}${selectedSeat.row}-${selectedSeat.seat} has been sent to ${email}.`,
+      description: `Thank you, ${fullName}. Your ticket receipt is ready.`,
     });
+  };
 
+  const handleDownloadReceipt = () => {
+    const input = receiptRef.current;
+    if (input) {
+      html2canvas(input, { scale: 2 }).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save("SeatSwap-Ticket-Receipt.pdf");
+      });
+    }
+  };
+
+  const handleBuyAnother = () => {
+    setPurchaseComplete(false);
+    setReceiptData(null);
     setSelectedSeat(null);
     setFullName('');
     setEmail('');
@@ -107,6 +143,68 @@ export default function GamePage({ params }: { params: any }) {
           </div>
 
           <div className="lg:col-span-1">
+            {purchaseComplete && receiptData ? (
+              <div className="sticky top-24">
+                <Card ref={receiptRef} className="p-4">
+                  <CardHeader className="text-center p-2">
+                    <div className="mx-auto bg-green-100 text-green-700 rounded-full h-12 w-12 flex items-center justify-center">
+                      <CheckCircle className="h-8 w-8" />
+                    </div>
+                    <CardTitle className="font-headline text-2xl mt-4">Purchase Confirmed</CardTitle>
+                    <CardDescription>Your e-ticket and receipt.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4 text-sm">
+                    <Separator />
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <h4 className="font-semibold mb-1">Game</h4>
+                        <p>{receiptData.game.teamA} vs {receiptData.game.teamB}</p>
+                        <p className="text-muted-foreground">{new Date(receiptData.game.date).toLocaleDateString()}</p>
+                        <p className="text-muted-foreground">{receiptData.game.venue}</p>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold mb-1">Seat</h4>
+                        <p>Section {receiptData.seat.section}, Row {receiptData.seat.row}</p>
+                        <p className="font-bold text-lg">Seat {receiptData.seat.seat}</p>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold mb-1">Billed To</h4>
+                        <p>{receiptData.user.fullName}</p>
+                        <p className="text-muted-foreground">{receiptData.user.email}</p>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold mb-1">Total Paid</h4>
+                        <p className="font-bold text-lg">£{receiptData.total}</p>
+                      </div>
+                    </div>
+                    <Separator />
+                    <div className="flex flex-col items-center justify-center space-y-2 p-4 bg-muted/50 rounded-lg">
+                        <h4 className="font-semibold text-center">Scan for Verification</h4>
+                        <div className="bg-white p-2 rounded-md shadow-md">
+                            <QRCode
+                                value={JSON.stringify({
+                                    gameId: receiptData.game.id,
+                                    seatId: `${receiptData.seat.section}-${receiptData.seat.row}-${receiptData.seat.seat}`,
+                                    owner: receiptData.user.fullName,
+                                    purchaseDate: receiptData.purchaseDate
+                                })}
+                                size={128}
+                                viewBox={`0 0 128 128`}
+                            />
+                        </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                <div className="mt-4 flex flex-col gap-2">
+                  <Button size="lg" className="w-full bg-accent hover:bg-accent/90" onClick={handleDownloadReceipt}>
+                    <Download className="mr-2 h-5 w-5" /> Download Receipt
+                  </Button>
+                  <Button size="lg" variant="outline" className="w-full" onClick={handleBuyAnother}>
+                    Buy Another Ticket
+                  </Button>
+                </div>
+              </div>
+            ) : (
              <Card className="sticky top-24">
               <CardHeader>
                 <CardTitle className="font-headline text-2xl flex items-center gap-2"><Ticket /> Your Order</CardTitle>
@@ -197,11 +295,12 @@ export default function GamePage({ params }: { params: any }) {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button size="lg" className="w-full bg-accent hover:bg-accent/90" onClick={handlePurchase}>
+                <Button size="lg" className="w-full bg-accent hover:bg-accent/90" onClick={handlePurchase} disabled={!selectedSeat}>
                   <CheckCircle className="mr-2 h-5 w-5" /> Purchase Tickets
                 </Button>
               </CardFooter>
             </Card>
+            )}
           </div>
         </div>
       </section>
