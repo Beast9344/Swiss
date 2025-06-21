@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   Sidebar,
   SidebarContent,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
@@ -10,7 +9,6 @@ import {
   SidebarInset,
   SidebarFooter,
 } from "@/components/ui/sidebar";
-import { Logo } from "@/components/logo";
 import { Home, Ticket, Users, Calendar, LogOut } from "lucide-react";
 
 export default function AdminLayout({
@@ -21,10 +19,7 @@ export default function AdminLayout({
   return (
     <SidebarProvider>
       <Sidebar>
-        <SidebarHeader>
-          <Logo />
-        </SidebarHeader>
-        <SidebarContent>
+        <SidebarContent className="pt-8">
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Dashboard">
