@@ -105,7 +105,7 @@ export default function AdminTicketsPage() {
                       <TableCell>Sec {ticket.section}, Row {ticket.row}, Seat {ticket.seat}</TableCell>
                       <TableCell>£{ticket.price.toFixed(2)}</TableCell>
                       <TableCell>
-                        <Badge variant={getBadgeVariant(ticket.status)} className={cn({'bg-green-500 text-white': ticket.status === 'listed', 'bg-yellow-500 text-white': ticket.status === 'pending'})}>
+                        <Badge variant={getBadgeVariant(ticket.status)} className={cn({ 'bg-accent text-accent-foreground': ticket.status === 'listed' })}>
                           {ticket.status}
                         </Badge>
                       </TableCell>

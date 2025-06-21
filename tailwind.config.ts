@@ -16,6 +16,11 @@ export default {
       },
     },
     extend: {
+      boxShadow: {
+        'neon-primary': '0 0 5px hsl(var(--primary)), 0 0 10px hsl(var(--primary))',
+        'neon-accent': '0 0 5px hsl(var(--accent)), 0 0 10px hsl(var(--accent))',
+        'neon-destructive': '0 0 5px hsl(var(--destructive)), 0 0 10px hsl(var(--destructive))',
+      },
       fontFamily: {
         body: ['var(--font-inter)', 'sans-serif'],
         headline: ['var(--font-literata)', 'serif'],

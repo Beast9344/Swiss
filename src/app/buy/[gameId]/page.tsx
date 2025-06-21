@@ -100,7 +100,7 @@ export default function GamePage({ params }: { params: any }) {
   const handleDownloadReceipt = () => {
     const input = receiptRef.current;
     if (input) {
-      html2canvas(input, { scale: 2 }).then((canvas) => {
+      html2canvas(input, { scale: 2, backgroundColor: null }).then((canvas) => {
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF('p', 'mm', 'a4');
         const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -128,10 +128,10 @@ export default function GamePage({ params }: { params: any }) {
           alt="Stadium background"
           layout="fill"
           objectFit="cover"
-          className="opacity-20"
+          className="opacity-10 brightness-50"
           data-ai-hint="stadium lights"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
         <div className="relative container mx-auto px-4 md:px-6 h-full flex flex-col justify-end pb-12">
           <h1 className="text-4xl md:text-6xl font-headline font-bold text-primary">{game.teamA} vs {game.teamB}</h1>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-4 text-lg text-muted-foreground">
@@ -169,9 +169,9 @@ export default function GamePage({ params }: { params: any }) {
           <div className="lg:col-span-1">
             {purchaseComplete && receiptData ? (
               <div className="sticky top-24">
-                <Card ref={receiptRef} className="p-4">
+                <Card ref={receiptRef} className="p-4 bg-card text-card-foreground">
                   <CardHeader className="text-center p-2">
-                    <div className="mx-auto bg-green-100 text-green-700 rounded-full h-12 w-12 flex items-center justify-center">
+                    <div className="mx-auto bg-accent/20 text-accent rounded-full h-12 w-12 flex items-center justify-center">
                       <CheckCircle className="h-8 w-8" />
                     </div>
                     <CardTitle className="font-headline text-2xl mt-4">Purchase Confirmed</CardTitle>

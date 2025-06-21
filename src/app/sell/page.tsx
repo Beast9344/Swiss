@@ -293,7 +293,7 @@ export default function SellPage() {
                                       </TableCell>
                                       <TableCell>{`Sec ${ticket.section}, Row ${ticket.row}, Seat ${ticket.seat}`}</TableCell>
                                       <TableCell>
-                                          <Badge variant={getBadgeVariant(ticket.status)} className={cn({'bg-green-500 text-white': ticket.status === 'sold'})}>
+                                          <Badge variant={getBadgeVariant(ticket.status)} className={cn({'bg-accent text-accent-foreground': ticket.status === 'sold'})}>
                                               {ticket.status}
                                           </Badge>
                                       </TableCell>

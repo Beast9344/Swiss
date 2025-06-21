@@ -40,7 +40,7 @@ export default function SeatMap({ seatData, basePrice, selectedSeat, onSeatSelec
       {seatData.sections.map((section) => (
         <div key={section.name}>
           <h3 className="text-lg font-headline font-semibold mb-4 text-center">Section {section.name}</h3>
-          <Card className="p-4 overflow-x-auto">
+          <Card className="p-4 overflow-x-auto bg-card/50">
             <CardContent className="p-0">
               <div className="flex flex-col gap-2 items-center mx-auto" style={{ width: 'fit-content' }}>
                 {Array.from({ length: section.rows }, (_, i) => i + 1).map((row) => (
@@ -57,9 +57,9 @@ export default function SeatMap({ seatData, basePrice, selectedSeat, onSeatSelec
                           size="icon"
                           className={cn(
                             'h-7 w-7 rounded-full text-[10px] font-bold transition-all duration-200 leading-none',
-                            !isAvailable && 'bg-destructive/70 text-destructive-foreground cursor-not-allowed',
-                            isAvailable && !isSelected && 'bg-accent/20 text-foreground hover:bg-accent/40 border border-accent/50',
-                            isSelected && 'bg-primary text-primary-foreground ring-2 ring-offset-background ring-offset-2 ring-primary scale-110 z-10'
+                            !isAvailable && 'bg-destructive/70 text-destructive-foreground cursor-not-allowed hover:shadow-neon-destructive',
+                            isAvailable && !isSelected && 'bg-accent/20 text-foreground hover:bg-accent/40 border border-accent/50 transition-shadow hover:shadow-neon-accent',
+                            isSelected && 'bg-primary text-primary-foreground ring-2 ring-offset-background ring-offset-2 ring-primary scale-110 z-10 shadow-neon-primary'
                           )}
                           onClick={() => handleSeatClick(section.name, row, seat, price, isAvailable)}
                           disabled={!isAvailable}
