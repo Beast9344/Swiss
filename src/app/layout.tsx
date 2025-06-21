@@ -5,6 +5,7 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Toaster } from "@/components/ui/toaster"
 import { Inter, Literata } from 'next/font/google';
+import { DataProvider } from '@/context/DataContext';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -40,10 +41,12 @@ export default function RootLayout({
         )}
         suppressHydrationWarning={true}
       >
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <Toaster />
+        <DataProvider>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <Toaster />
+        </DataProvider>
       </body>
     </html>
   );

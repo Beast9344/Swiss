@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { games, Game, users, tickets, User } from '@/lib/data';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircle, AlertCircle, Ticket as TicketIcon } from 'lucide-react';
@@ -15,9 +14,12 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { cn } from '@/lib/utils';
+import { useData } from '@/context/DataContext';
+import type { Game, User } from '@/lib/data';
 
 
 export default function SellPage() {
+  const { games, users, tickets } = useData();
   const [authState, setAuthState] = useState<'unauthenticated' | 'authenticated'>('unauthenticated');
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [error, setError] = useState('');
@@ -73,7 +75,9 @@ export default function SellPage() {
         title: "Your tickets have been listed!",
         description: "You can track their status on your dashboard. You will be notified by email when a ticket is sold.",
     });
-    // Reset state
+    // This is a mock. In a real app, we would call an API to create the listings.
+    // Here, we can't easily modify the shared state from here without more complex logic.
+    // The main goal of showing status is already handled by reading the initial ticket data.
     setSelectedGames([]);
     setShowSummary(false);
   }

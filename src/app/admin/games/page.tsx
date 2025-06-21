@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { games as initialGames, Game } from "@/lib/data";
+import { Game } from "@/lib/data";
 import {
   Table,
   TableBody,
@@ -32,9 +32,10 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { useData } from "@/context/DataContext";
 
 export default function AdminGamesPage() {
-  const [games, setGames] = useState<Game[]>(initialGames);
+  const { games, setGames } = useData();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingGame, setEditingGame] = useState<Game | null>(null);
   const { toast } = useToast();

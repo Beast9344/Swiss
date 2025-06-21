@@ -1,6 +1,7 @@
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, Ticket, Clock, CheckCircle, BarChart3 } from "lucide-react";
-import { tickets, users, games } from "@/lib/data";
 import {
   Table,
   TableBody,
@@ -9,13 +10,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import { useData } from "@/context/DataContext";
 
 export default function AdminDashboard() {
+  const { tickets, users, games } = useData();
+
   const totalListed = tickets.length;
   const pendingApprovals = tickets.filter(t => t.status === 'pending').length;
-  const recentSales = tickets.filter(t => t.status === 'sold').slice(0, 5);
+  // Show last 5 sold tickets
+  const recentSales = tickets.filter(t => t.status === 'sold').slice(-5).reverse();
   const totalRevenue = tickets.filter(t => t.status === 'sold').reduce((acc, t) => acc + t.price, 0);
+  const totalSalesCount = tickets.filter(t => t.status === 'sold').length;
 
   const getGameInfo = (gameId: string) => {
     return games.find(g => g.id === gameId);
@@ -40,7 +45,7 @@ export default function AdminDashboard() {
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">£{totalRevenue.toLocaleString()}</div>
+              <div className="text-2xl font-bold">£{totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
               <p className="text-xs text-muted-foreground">+20.1% from last month</p>
             </CardContent>
           </Card>
@@ -70,7 +75,7 @@ export default function AdminDashboard() {
               <CheckCircle className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{recentSales.length}</div>
+              <div className="text-2xl font-bold">{totalSalesCount}</div>
               <p className="text-xs text-muted-foreground">+5 since yesterday</p>
             </CardContent>
           </Card>
@@ -86,14 +91,14 @@ export default function AdminDashboard() {
                       <TableRow>
                           <TableHead>Game</TableHead>
                           <TableHead>Seat</TableHead>
-                          <TableHead>Seller</TableHead>
+                          <TableHead>Buyer</TableHead>
                           <TableHead className="text-right">Price</TableHead>
                       </TableRow>
                   </TableHeader>
                   <TableBody>
                       {recentSales.map(ticket => {
                           const game = getGameInfo(ticket.gameId);
-                          const user = getUserInfo(ticket.sellerId);
+                          const user = getUserInfo(ticket.sellerId); // In our new flow, this ID belongs to the buyer
                           return (
                               <TableRow key={ticket.id}>
                                   <TableCell>{game ? `${game.teamA} vs ${game.teamB}`: 'N/A'}</TableCell>

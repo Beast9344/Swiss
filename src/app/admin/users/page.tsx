@@ -1,6 +1,6 @@
 "use client";
 
-import { users } from "@/lib/data";
+import { useData } from "@/context/DataContext";
 import {
   Table,
   TableBody,
@@ -15,6 +15,8 @@ import { Download } from "lucide-react";
 import { Card, CardContent } from '@/components/ui/card';
 
 export default function AdminUsersPage() {
+  const { users } = useData();
+  
   return (
     <div className="flex h-full flex-col">
       <div className="flex-shrink-0 p-8 pt-6 pb-4">
@@ -47,8 +49,8 @@ export default function AdminUsersPage() {
                       <TableCell className="font-medium">{user.name}</TableCell>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>
-                          <Badge variant={user.type === 'seller' ? 'secondary' : 'outline'}>
-                          {user.type}
+                          <Badge variant={user.type === 'seller' ? 'secondary' : user.type === 'buyer' ? 'outline' : 'default'}>
+                            {user.type}
                           </Badge>
                       </TableCell>
                       <TableCell>{user.id}</TableCell>

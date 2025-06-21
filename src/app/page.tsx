@@ -2,14 +2,15 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { games } from '@/lib/data';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { GameCard } from '@/components/game-card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { useData } from '@/context/DataContext';
 
 export default function Home() {
+  const { games } = useData();
   const [selectedClub, setSelectedClub] = useState<string | null>(null);
 
   const allClubs = Array.from(new Set(games.flatMap(game => [game.teamA, game.teamB]))).sort();

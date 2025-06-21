@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from 'react';
-import { tickets as initialTickets, games, users } from "@/lib/data";
+import { useData } from '@/context/DataContext';
 import type { Ticket } from "@/lib/data";
 import {
   Table,
@@ -27,7 +26,7 @@ import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 
 export default function AdminTicketsPage() {
-  const [tickets, setTickets] = useState<Ticket[]>(initialTickets);
+  const { tickets, setTickets, games, users } = useData();
   const { toast } = useToast();
 
   const handleStatusChange = (ticketId: string, status: 'listed' | 'rejected') => {

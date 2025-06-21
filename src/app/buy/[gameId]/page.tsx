@@ -1,8 +1,6 @@
-
 "use client"
 
 import { useState, use, useRef } from "react";
-import { games, seatData } from "@/lib/data"
 import { notFound } from "next/navigation"
 import Image from "next/image"
 import { CalendarDays, MapPin, Ticket, CreditCard, User as UserIcon, CheckCircle, Download } from "lucide-react"
@@ -17,10 +15,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import QRCode from "react-qr-code";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-
+import { useData } from "@/context/DataContext";
 
 export default function GamePage({ params }: { params: any }) {
   const resolvedParams = use(params);
+  const { games, seatData, addTicket, addUser, updateSeatData } = useData();
   const game = games.find(g => g.id === resolvedParams.gameId)
   const { toast } = useToast();
   
@@ -55,13 +54,38 @@ export default function GamePage({ params }: { params: any }) {
       });
       return;
     }
+    
+    // Create new user
+    const newUser = addUser({
+      name: fullName,
+      email: email,
+      password: password,
+      type: 'buyer'
+    });
+
+    const totalCost = parseFloat((selectedSeat.price * 1.1).toFixed(2));
+    
+    // Add new ticket record
+    addTicket({
+      gameId: game.id,
+      section: selectedSeat.section,
+      row: selectedSeat.row,
+      seat: selectedSeat.seat,
+      price: totalCost,
+      status: 'sold',
+      sellerId: newUser.id, // Assign the new user to this "sold" record for tracking on dashboard
+    });
+
+    // Update seat map to make this seat unavailable for others
+    const seatId = `${selectedSeat.section}-${selectedSeat.row}-${selectedSeat.seat}`;
+    updateSeatData(seatId);
 
     const receiptDetails = {
       game,
       seat: selectedSeat,
       user: { fullName, email },
       purchaseDate: new Date().toISOString(),
-      total: (selectedSeat.price * 1.1).toFixed(2),
+      total: totalCost.toFixed(2),
     };
 
     setReceiptData(receiptDetails);

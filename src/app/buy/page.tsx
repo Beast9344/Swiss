@@ -1,7 +1,10 @@
+"use client";
+
 import { GameCard } from '@/components/game-card';
-import { games } from '@/lib/data';
+import { useData } from '@/context/DataContext';
 
 export default function BuyPage() {
+  const { games } = useData();
   const futureGames = games.filter(game => new Date(game.date) > new Date());
 
   return (
