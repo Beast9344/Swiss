@@ -4,6 +4,21 @@ import { cn } from '@/lib/utils';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Toaster } from "@/components/ui/toaster"
+import { Inter, Literata } from 'next/font/google';
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  weight: ['400', '500', '700'],
+  display: 'swap',
+});
+
+const literata = Literata({
+  subsets: ['latin'],
+  variable: '--font-literata',
+  weight: ['400', '700'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'SeatSwap - The Premier Ticket Resale Platform',
@@ -16,12 +31,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full" suppressHydrationWarning={true}>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Literata:wght@400;700&display=swap" rel="stylesheet" />
-      </head>
+    <html lang="en" className={cn("h-full", inter.variable, literata.variable)} suppressHydrationWarning={true}>
+      <head />
       <body
         className={cn(
           'relative h-full font-body antialiased',
