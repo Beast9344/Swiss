@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
 
 interface SeatMapProps {
   seatData: {
@@ -63,16 +62,16 @@ export default function SeatMap({ seatData, basePrice }: SeatMapProps) {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="p-4 rounded-lg bg-muted/50 flex items-center justify-center text-sm font-medium">STAGE</div>
+    <div className="space-y-8">
+      <div className="p-3 rounded-lg bg-foreground text-background flex items-center justify-center text-sm font-bold tracking-widest">STAGE</div>
       {seatData.sections.map((section) => (
         <div key={section.name}>
-          <h3 className="text-lg font-headline font-semibold mb-2 text-center">Section {section.name}</h3>
+          <h3 className="text-lg font-headline font-semibold mb-4 text-center">Section {section.name}</h3>
           <Card className="p-4 overflow-x-auto">
             <CardContent className="p-0">
-              <div className="flex flex-col gap-1.5 items-center">
+              <div className="flex flex-col gap-2 items-center mx-auto" style={{ width: 'fit-content' }}>
                 {Array.from({ length: section.rows }, (_, i) => i + 1).map((row) => (
-                  <div key={row} className="flex gap-1.5">
+                  <div key={row} className="flex gap-2">
                     {Array.from({ length: section.seatsPerRow }, (_, j) => j + 1).map((seat) => {
                       const seatId = `${section.name}-${row}-${seat}`;
                       const isAvailable = !seatData.unavailableSeats.includes(seatId);
@@ -83,12 +82,11 @@ export default function SeatMap({ seatData, basePrice }: SeatMapProps) {
                         <Button
                           key={seatId}
                           size="icon"
-                          variant={isSelected ? "default" : "outline"}
                           className={cn(
-                            'h-6 w-6 rounded-sm',
-                            !isAvailable && 'bg-muted text-muted-foreground cursor-not-allowed',
-                            isAvailable && !isSelected && 'hover:bg-accent/20',
-                            isSelected && 'bg-primary text-primary-foreground'
+                            'h-7 w-7 rounded-full text-[10px] font-bold transition-all duration-200 leading-none',
+                            !isAvailable && 'bg-destructive/70 text-destructive-foreground cursor-not-allowed',
+                            isAvailable && !isSelected && 'bg-accent/20 text-foreground hover:bg-accent/40 border border-accent/50',
+                            isSelected && 'bg-primary text-primary-foreground ring-2 ring-offset-background ring-offset-2 ring-primary scale-110 z-10'
                           )}
                           onClick={() => handleSeatClick(section.name, row, seat, price, isAvailable)}
                           disabled={!isAvailable}
@@ -105,10 +103,10 @@ export default function SeatMap({ seatData, basePrice }: SeatMapProps) {
           </Card>
         </div>
       ))}
-      <div className="flex justify-center items-center gap-6 text-sm mt-4">
-        <div className="flex items-center gap-2"><div className="h-4 w-4 rounded-sm border border-input bg-background" /> Available</div>
-        <div className="flex items-center gap-2"><div className="h-4 w-4 rounded-sm bg-primary" /> Selected</div>
-        <div className="flex items-center gap-2"><div className="h-4 w-4 rounded-sm bg-muted" /> Unavailable</div>
+      <div className="flex justify-center items-center flex-wrap gap-6 text-sm mt-6 pt-6 border-t">
+        <div className="flex items-center gap-2"><div className="h-4 w-4 rounded-full bg-accent/20 border border-accent/50" /> Available</div>
+        <div className="flex items-center gap-2"><div className="h-4 w-4 rounded-full bg-primary" /> Selected</div>
+        <div className="flex items-center gap-2"><div className="h-4 w-4 rounded-full bg-destructive/70" /> Unavailable</div>
       </div>
     </div>
   );
