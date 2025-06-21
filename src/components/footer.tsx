@@ -1,7 +1,18 @@
+'use client';
+
+import { usePathname } from 'next/navigation';
 import { Logo } from "./logo";
 import { Github, Twitter, Linkedin } from "lucide-react";
 
 export function Footer() {
+  const pathname = usePathname();
+  const isAdminPage = pathname.startsWith('/admin');
+  const isLoginPage = pathname.startsWith('/login');
+
+  if (isAdminPage || isLoginPage) {
+    return null;
+  }
+  
   return (
     <footer className="bg-card border-t">
       <div className="container mx-auto px-4 md:px-6 py-8">
