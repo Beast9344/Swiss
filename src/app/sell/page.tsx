@@ -28,10 +28,10 @@ export default function SellPage() {
 
     const user = users.find(u => u.email === email && u.password === password);
     
-    if (user && user.type === 'seller') {
+    if (user) {
       setAuthState('authenticated');
     } else {
-      setError('You do not own a seasonal ticket. Please check your credentials or contact support if you believe this is an error.');
+      setError('Invalid credentials. Please check your email and password.');
     }
   };
 
@@ -120,9 +120,9 @@ export default function SellPage() {
           <div>
             <Card>
               <CardHeader>
-                <CardTitle className="font-headline">Login through club</CardTitle>
+                <CardTitle className="font-headline">Login to Sell Tickets</CardTitle>
                 <CardDescription>
-                  Log in with your email and password to verify your seasonal ticket ownership. (e.g. john.doe@example.com / password123)
+                  Use your account credentials to log in and list your ticket. Any user can sell a ticket. (e.g. john.doe@example.com / password123)
                 </CardDescription>
               </CardHeader>
               <form id="login-form" onSubmit={handleLogin}>
