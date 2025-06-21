@@ -14,11 +14,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { cn } from '@/lib/utils';
 import { useData } from '@/context/DataContext';
-import type { Game, User } from '@/lib/data';
+import type { Game, User, Ticket } from '@/lib/data';
 
 
 export default function SellPage() {
-  const { games, users, tickets } = useData();
+  const { games, users, tickets, addTicket } = useData();
   const [authState, setAuthState] = useState<'unauthenticated' | 'authenticated'>('unauthenticated');
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [error, setError] = useState('');
@@ -70,13 +70,26 @@ export default function SellPage() {
   
   const handleConfirmSale = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    toast({
-        title: "Your tickets have been listed!",
-        description: "You can track their status on your dashboard. You will be notified by email when a ticket is sold.",
+    if (!currentUser) return;
+
+    selectedGames.forEach(game => {
+      const newTicket: Omit<Ticket, 'id'> = {
+        gameId: game.id,
+        sellerId: currentUser.id,
+        section: 'ST', // Mock: Season Ticket holder's section
+        row: 1,
+        seat: 1,
+        price: game.basePrice, // Using base price for mock sale
+        status: 'pending' // New listings require admin approval
+      };
+      addTicket(newTicket);
     });
-    // This is a mock. In a real app, we would call an API to create the listings.
-    // Here, we can't easily modify the shared state from here without more complex logic.
-    // The main goal of showing status is already handled by reading the initial ticket data.
+
+    toast({
+        title: "Your tickets have been submitted for approval!",
+        description: "You can track their status on your dashboard. They will be listed after admin review.",
+    });
+
     setSelectedGames([]);
     setShowSummary(false);
   }
