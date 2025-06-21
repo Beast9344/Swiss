@@ -24,8 +24,9 @@ export function Header() {
   };
 
   const isAdminPage = pathname.startsWith('/admin');
+  const isLoginPage = pathname.startsWith('/login');
 
-  if (isAdminPage) {
+  if (isAdminPage || isLoginPage) {
     return null;
   }
 
@@ -47,7 +48,7 @@ export function Header() {
             </Link>
           ))}
           <Button asChild variant="outline" size="sm">
-            <Link href="/admin">Admin Panel</Link>
+            <Link href="/login">Login</Link>
           </Button>
         </nav>
         <button
@@ -74,7 +75,7 @@ export function Header() {
               </Link>
             ))}
             <Button asChild variant="outline" size="sm" onClick={() => setIsMenuOpen(false)}>
-              <Link href="/admin">Admin Panel</Link>
+              <Link href="/login">Login</Link>
             </Button>
           </nav>
         </div>

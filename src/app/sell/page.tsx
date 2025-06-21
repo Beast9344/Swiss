@@ -8,34 +8,14 @@ import { Label } from '@/components/ui/label';
 import { games, Game } from '@/lib/data';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { CheckCircle, LogIn, UserX } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 import Image from 'next/image';
 
-type AuthState = 'loggedOut' | 'loggedIn' | 'loginFailed';
-
 export default function SellPage() {
-  const [authState, setAuthState] = useState<AuthState>('loggedOut');
   const [selectedGames, setSelectedGames] = useState<Game[]>([]);
   const [showSummary, setShowSummary] = useState(false);
   const { toast } = useToast();
 
-  const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const email = formData.get('email');
-    if (email === 'seller@example.com') {
-      setAuthState('loggedIn');
-      toast({
-        title: "Login Successful",
-        description: "Welcome! Please select the games for which you want to sell tickets.",
-        variant: "default",
-      });
-    } else {
-      setAuthState('loginFailed');
-    }
-  };
-  
   const handleGameSelect = (game: Game, checked: boolean) => {
     setSelectedGames(prev =>
       checked ? [...prev, game] : prev.filter(g => g.id !== game.id)
@@ -65,41 +45,6 @@ export default function SellPage() {
     setShowSummary(false);
   }
 
-  if (authState === 'loggedOut' || authState === 'loginFailed') {
-    return (
-      <div className="container mx-auto px-4 md:px-6 py-12 md:py-20 flex items-center justify-center min-h-[calc(100vh-8rem)]">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <CardTitle className="font-headline text-2xl">Season Ticket Holder Login</CardTitle>
-            <CardDescription>Please log in with your club account to list your tickets.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {authState === 'loginFailed' && (
-              <Alert variant="destructive" className="mb-4">
-                <UserX className="h-4 w-4" />
-                <AlertTitle>Login Failed</AlertTitle>
-                <AlertDescription>You do not seem to own a seasonal ticket. Please check your credentials.</AlertDescription>
-              </Alert>
-            )}
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" name="email" type="email" placeholder="Enter your email (use seller@example.com)" required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input id="password" name="password" type="password" defaultValue="password" />
-              </div>
-              <Button type="submit" className="w-full">
-                <LogIn className="mr-2 h-4 w-4" /> Log In
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   if (showSummary) {
      return (
         <div className="container mx-auto px-4 md:px-6 py-12 md:py-20">
@@ -118,7 +63,7 @@ export default function SellPage() {
                              </li>
                          ))}
                      </ul>
-                     <form onSubmit={handleConfirmSale} className="space-y-4">
+                     <form onSubmit={handleConfirmSale} className="space-y-4" id="bank-info-form">
                         <h3 className="font-medium mb-2">Payout Information</h3>
                         <div className="space-y-2">
                             <Label htmlFor="bank-name">Bank Name</Label>
@@ -136,7 +81,7 @@ export default function SellPage() {
                  </CardContent>
                  <CardFooter className="flex justify-between">
                      <Button variant="outline" onClick={() => setShowSummary(false)}>Back</Button>
-                     <Button type="submit" form="bank-info-form" onClick={handleConfirmSale} className="bg-accent hover:bg-accent/90">
+                     <Button type="submit" form="bank-info-form" className="bg-accent hover:bg-accent/90">
                         <CheckCircle className="mr-2 h-4 w-4" /> Confirm and List
                      </Button>
                  </CardFooter>
