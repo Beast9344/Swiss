@@ -24,6 +24,7 @@ export type User = {
     name: string;
     email: string;
     type: 'seller' | 'buyer' | 'admin';
+    password?: string;
 };
 
 export const games: Game[] = [
@@ -43,10 +44,10 @@ export const tickets: Ticket[] = [
 ];
 
 export const users: User[] = [
-    { id: 'u1', name: 'John Doe', email: 'john.doe@example.com', type: 'seller' },
-    { id: 'u2', name: 'Jane Smith', email: 'jane.smith@example.com', type: 'seller' },
-    { id: 'u3', name: 'Peter Jones', email: 'peter.jones@example.com', type: 'buyer' },
-    { id: 'admin', name: 'Admin User', email: 'admin@seatswap.com', type: 'admin' },
+    { id: 'u1', name: 'John Doe', email: 'john.doe@example.com', type: 'seller', password: 'password123' },
+    { id: 'u2', name: 'Jane Smith', email: 'jane.smith@example.com', type: 'seller', password: 'password123' },
+    { id: 'u3', name: 'Peter Jones', email: 'peter.jones@example.com', type: 'buyer', password: 'password123' },
+    { id: 'admin', name: 'Admin User', email: 'admin@seatswap.com', type: 'admin', password: 'admin' },
 ];
 
 export const seatData = {

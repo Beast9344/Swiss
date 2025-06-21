@@ -23,13 +23,9 @@ export default function LoginPage() {
 
     const user = users.find(u => u.email === email);
 
-    if (user) {
+    if (user && user.password === password) {
       if (user.type === 'admin') {
-        if (password === 'admin') {
-          router.push('/admin');
-        } else {
-          setError('Invalid email or password.');
-        }
+        router.push('/admin');
       } else {
         router.push('/');
       }
@@ -44,7 +40,10 @@ export default function LoginPage() {
         <CardHeader className="text-center space-y-4">
             <Logo className="justify-center" />
           <CardTitle className="font-headline text-2xl">Login</CardTitle>
-          <CardDescription>Enter your credentials to access your account.</CardDescription>
+          <CardDescription>
+            Enter your credentials to access your account. <br/>
+            (eg. admin@seatswap.com / admin, or john.doe@example.com / password123)
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {error && (
