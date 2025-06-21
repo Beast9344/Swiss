@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Button } from './ui/button';
 import { Logo } from './logo';
-import { Menu, X, Twitter, Github, Linkedin } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -47,9 +47,6 @@ export function Header() {
               {link.label}
             </Link>
           ))}
-          <Button asChild variant="outline" size="sm">
-            <Link href="/login">Login</Link>
-          </Button>
         </nav>
         <button
           className="md:hidden ml-auto"
@@ -74,9 +71,6 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
-            <Button asChild variant="outline" size="sm" onClick={() => setIsMenuOpen(false)}>
-              <Link href="/login">Login</Link>
-            </Button>
           </nav>
         </div>
       )}

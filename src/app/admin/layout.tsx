@@ -59,7 +59,7 @@ export default function AdminLayout({
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton asChild tooltip="Logout">
-                        <Link href="/login">
+                        <Link href="/">
                             <LogOut/>
                             Logout
                         </Link>

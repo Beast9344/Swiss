@@ -4,7 +4,7 @@ import { useState, use } from "react";
 import { games, seatData } from "@/lib/data"
 import { notFound } from "next/navigation"
 import Image from "next/image"
-import { CalendarDays, MapPin, Ticket, CreditCard } from "lucide-react"
+import { CalendarDays, MapPin, Ticket, CreditCard, User as UserIcon, CheckCircle } from "lucide-react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import SeatMap, { type Seat } from "@/components/seat-map"
@@ -12,12 +12,17 @@ import { Separator } from "@/components/ui/separator"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function GamePage({ params }: { params: any }) {
   const resolvedParams = use(params);
   const game = games.find(g => g.id === resolvedParams.gameId)
   const { toast } = useToast();
   const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('card');
+
 
   if (!game) {
     notFound()
@@ -32,16 +37,25 @@ export default function GamePage({ params }: { params: any }) {
       });
       return;
     }
+    if (!fullName || !email) {
+      toast({
+        title: "Missing Information",
+        description: "Please enter your full name and email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // In a real app, you would add more validation for payment details here.
 
     toast({
       title: "Purchase Successful!",
-      description: `You've successfully purchased seat ${selectedSeat.section}${selectedSeat.row}-${selectedSeat.seat}. Your tickets are on their way.`,
+      description: `Thank you, ${fullName}. Your ticket for seat ${selectedSeat.section}${selectedSeat.row}-${selectedSeat.seat} has been sent to ${email}.`,
     });
 
-    // In a real app, you would add the purchased seat to the unavailable list
-    // and likely redirect to a confirmation page.
     setSelectedSeat(null);
-    // You might also want to clear payment fields here.
+    setFullName('');
+    setEmail('');
   };
 
   return (
@@ -118,37 +132,67 @@ export default function GamePage({ params }: { params: any }) {
                     )}
                 </div>
                 <Separator />
-                <div>
-                    <h3 className="font-headline text-lg mb-4 flex items-center gap-2"><CreditCard /> Payment Information</h3>
-                    <div className="space-y-4">
+                 <div>
+                    <h3 className="font-headline text-lg mb-4 flex items-center gap-2"><UserIcon /> Your Information</h3>
+                     <div className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="name">Name on Card</Label>
-                            <Input id="name" placeholder="John M. Doe" />
+                            <Label htmlFor="fullName">Full Name</Label>
+                            <Input id="fullName" placeholder="John M. Doe" value={fullName} onChange={e => setFullName(e.target.value)} />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="cardNumber">Card Number</Label>
-                            <Input id="cardNumber" placeholder="1234 5678 9012 3456" />
-                        </div>
-                        <div className="grid grid-cols-3 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="expiry">Expires</Label>
-                                <Input id="expiry" placeholder="MM/YY" />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="cvc">CVC</Label>
-                                <Input id="cvc" placeholder="CVC" />
-                            </div>
-                             <div className="space-y-2">
-                                <Label htmlFor="zip">ZIP</Label>
-                                <Input id="zip" placeholder="ZIP" />
-                            </div>
+                            <Label htmlFor="email">Email Address</Label>
+                            <Input id="email" type="email" placeholder="john.doe@example.com" value={email} onChange={e => setEmail(e.target.value)} />
                         </div>
                     </div>
+                </div>
+                <Separator />
+                <div>
+                    <h3 className="font-headline text-lg mb-4 flex items-center gap-2"><CreditCard /> Payment Information</h3>
+                    <Tabs value={paymentMethod} onValueChange={setPaymentMethod}>
+                      <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="card">Credit Card</TabsTrigger>
+                        <TabsTrigger value="paypal">PayPal</TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="card" className="mt-4">
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="name">Name on Card</Label>
+                                <Input id="name" placeholder="John M. Doe" />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="cardNumber">Card Number</Label>
+                                <Input id="cardNumber" placeholder="1234 5678 9012 3456" />
+                            </div>
+                            <div className="grid grid-cols-3 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="expiry">Expires</Label>
+                                    <Input id="expiry" placeholder="MM/YY" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="cvc">CVC</Label>
+                                    <Input id="cvc" placeholder="CVC" />
+                                </div>
+                                 <div className="space-y-2">
+                                    <Label htmlFor="zip">ZIP</Label>
+                                    <Input id="zip" placeholder="ZIP" />
+                                </div>
+                            </div>
+                        </div>
+                      </TabsContent>
+                      <TabsContent value="paypal" className="mt-4">
+                          <div className="text-center p-8 border-dashed border-2 rounded-md">
+                              <p className="text-muted-foreground mb-4">You will be redirected to PayPal to complete your purchase securely.</p>
+                              <Button variant="outline" className="w-full">
+                                  Pay with PayPal
+                              </Button>
+                          </div>
+                      </TabsContent>
+                    </Tabs>
                 </div>
               </CardContent>
               <CardFooter>
                 <Button size="lg" className="w-full bg-accent hover:bg-accent/90" onClick={handlePurchase}>
-                  Purchase Tickets
+                  <CheckCircle className="mr-2 h-5 w-5" /> Purchase Tickets
                 </Button>
               </CardFooter>
             </Card>
