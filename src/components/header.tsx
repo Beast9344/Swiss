@@ -3,13 +3,13 @@
 import Link from 'next/link';
 import { Button } from './ui/button';
 import { Logo } from './logo';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Twitter, Github, Linkedin } from 'lucide-react';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 const navLinks = [
-  { href: '/', label: 'Home' },
+  { href: '/', label: 'Home page' },
   { href: '/buy', label: 'Buy a Ticket' },
   { href: '/sell', label: 'Sell a Ticket' },
   { href: '/contact', label: 'Contact' },

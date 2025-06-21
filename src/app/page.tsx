@@ -6,7 +6,7 @@ import { ArrowRight } from 'lucide-react';
 import { GameCard } from '@/components/game-card';
 
 export default function Home() {
-  const upcomingGames = games.slice(0, 4);
+  const futureGames = games.filter(game => new Date(game.date) > new Date());
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -40,16 +40,9 @@ export default function Home() {
               Games on the Horizon
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {upcomingGames.map((game) => (
+              {futureGames.map((game) => (
                 <GameCard key={game.id} game={game} />
               ))}
-            </div>
-            <div className="text-center mt-12">
-              <Button asChild variant="link" className="text-accent-foreground/80">
-                <Link href="/buy">
-                  View All Games <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
             </div>
           </div>
         </section>
