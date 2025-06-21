@@ -31,13 +31,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("h-full", inter.variable, literata.variable)} suppressHydrationWarning={true}>
+    <html lang="en" className={cn("h-full", inter.variable, literata.variable)}>
       <head />
       <body
         className={cn(
           'relative h-full font-body antialiased',
           'flex flex-col'
         )}
+        suppressHydrationWarning={true}
       >
         <Header />
         <main className="flex-1">{children}</main>
