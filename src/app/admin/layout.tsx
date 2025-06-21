@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Sidebar,
   SidebarContent,
@@ -26,27 +27,35 @@ export default function AdminLayout({
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton href="/admin" tooltip="Dashboard">
-                <Home />
-                Dashboard
+              <SidebarMenuButton asChild tooltip="Dashboard">
+                <Link href="/admin">
+                  <Home />
+                  Dashboard
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton href="/admin/tickets" tooltip="Tickets">
-                <Ticket />
-                Ticket Management
+              <SidebarMenuButton asChild tooltip="Tickets">
+                <Link href="/admin/tickets">
+                  <Ticket />
+                  Ticket Management
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton href="/admin/users" tooltip="Users">
-                <Users />
-                User Management
+              <SidebarMenuButton asChild tooltip="Users">
+                <Link href="/admin/users">
+                  <Users />
+                  User Management
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton href="/admin/games" tooltip="Games">
-                <Calendar />
-                Game Schedule
+              <SidebarMenuButton asChild tooltip="Games">
+                <Link href="/admin/games">
+                  <Calendar />
+                  Game Schedule
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -54,9 +63,11 @@ export default function AdminLayout({
         <SidebarFooter>
             <SidebarMenu>
                 <SidebarMenuItem>
-                    <SidebarMenuButton href="/" tooltip="Logout">
-                        <LogOut/>
-                        Logout
+                    <SidebarMenuButton asChild tooltip="Logout">
+                        <Link href="/admin/login">
+                            <LogOut/>
+                            Logout
+                        </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
             </SidebarMenu>
