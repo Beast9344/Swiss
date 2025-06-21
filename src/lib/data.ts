@@ -29,10 +29,13 @@ export type User = {
 
 export const games: Game[] = [
   { id: '1', teamA: 'Arsenal', teamB: 'Chelsea', date: '2025-07-15', status: 'Tickets Available', venue: 'Emirates Stadium', basePrice: 70 },
-  { id: '2', teamA: 'Arsenal', teamB: 'Liverpool', date: '2025-07-22', status: 'No Tickets Yet', venue: 'Emirates Stadium', basePrice: 80 },
+  { id: '2', teamA: 'Liverpool', teamB: 'Arsenal', date: '2025-07-22', status: 'No Tickets Yet', venue: 'Anfield', basePrice: 80 },
   { id: '3', teamA: 'Arsenal', teamB: 'Manchester City', date: '2025-08-05', status: 'Tickets Available', venue: 'Emirates Stadium', basePrice: 85 },
-  { id: '4', teamA: 'Arsenal', teamB: 'Tottenham', date: '2025-08-12', status: 'Tickets Available', venue: 'Emirates Stadium', basePrice: 75 },
+  { id: '4', teamA: 'Tottenham', teamB: 'Arsenal', date: '2025-08-12', status: 'Tickets Available', venue: 'Tottenham Hotspur Stadium', basePrice: 75 },
   { id: '5', teamA: 'Arsenal', teamB: 'Manchester United', date: '2025-08-19', status: 'No Tickets Yet', venue: 'Emirates Stadium', basePrice: 90 },
+  { id: '6', teamA: 'Manchester City', teamB: 'Chelsea', date: '2025-07-19', status: 'Tickets Available', venue: 'Etihad Stadium', basePrice: 72 },
+  { id: '7', teamA: 'Manchester United', teamB: 'Liverpool', date: '2025-07-26', status: 'Tickets Available', venue: 'Old Trafford', basePrice: 88 },
+  { id: '8', teamA: 'Chelsea', teamB: 'Tottenham', date: '2025-08-02', status: 'No Tickets Yet', venue: 'Stamford Bridge', basePrice: 78 },
 ];
 
 export const tickets: Ticket[] = [

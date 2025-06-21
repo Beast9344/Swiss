@@ -1,12 +1,26 @@
+"use client";
+
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { games } from '@/lib/data';
 import Link from 'next/link';
-import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { GameCard } from '@/components/game-card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 export default function Home() {
-  const futureGames = games.filter(game => new Date(game.date) > new Date());
+  const [selectedClub, setSelectedClub] = useState<string | null>(null);
+
+  const allClubs = Array.from(new Set(games.flatMap(game => [game.teamA, game.teamB]))).sort();
+
+  const futureGames = games.filter(game => {
+    const isFuture = new Date(game.date) > new Date();
+    if (!selectedClub) {
+      return isFuture;
+    }
+    return isFuture && (game.teamA === selectedClub || game.teamB === selectedClub);
+  });
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -38,14 +52,34 @@ export default function Home() {
 
         <section className="py-16 md:py-24 bg-background">
           <div className="container mx-auto px-4 md:px-6">
-            <h2 className="text-5xl md:text-7xl font-headline font-bold text-center mb-16 text-muted-foreground/30 tracking-widest">
+            <h2 className="text-5xl md:text-7xl font-headline font-bold text-center mb-8 text-muted-foreground/30 tracking-widest">
               GAMES ON THE HORIZON
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {futureGames.map((game) => (
-                <GameCard key={game.id} game={game} />
-              ))}
+
+            <div className="max-w-sm mx-auto mb-16">
+              <Label htmlFor="club-select" className="text-center block mb-2 font-medium">Choose your club to see their matches</Label>
+              <Select onValueChange={(value) => setSelectedClub(value === 'all' ? null : value)}>
+                <SelectTrigger id="club-select" className="w-full">
+                  <SelectValue placeholder="All Clubs" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Clubs</SelectItem>
+                  {allClubs.map(club => (
+                    <SelectItem key={club} value={club}>{club}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
+            
+            {futureGames.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                {futureGames.map((game) => (
+                  <GameCard key={game.id} game={game} />
+                ))}
+              </div>
+            ) : (
+              <p className="text-center text-muted-foreground mt-8">No upcoming games match your selection.</p>
+            )}
           </div>
         </section>
       </main>
