@@ -9,7 +9,8 @@ import {
   SidebarInset,
   SidebarFooter,
 } from "@/components/ui/sidebar";
-import { LayoutDashboard, Ticket, Users, CalendarDays, LogOut } from "lucide-react";
+import { LayoutDashboard, Ticket, Users, CalendarDays } from "lucide-react";
+import { LogoutButton } from "./logout-button";
 
 export default function AdminLayout({
   children,
@@ -58,12 +59,7 @@ export default function AdminLayout({
         <SidebarFooter>
             <SidebarMenu>
                 <SidebarMenuItem>
-                    <SidebarMenuButton asChild tooltip="Logout">
-                        <Link href="/">
-                            <LogOut/>
-                            Logout
-                        </Link>
-                    </SidebarMenuButton>
+                    <LogoutButton />
                 </SidebarMenuItem>
             </SidebarMenu>
         </SidebarFooter>

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Button } from './ui/button';
 import { Logo } from './logo';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, UserCog } from 'lucide-react';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -47,6 +47,9 @@ export function Header() {
               {link.label}
             </Link>
           ))}
+           <Link href="/admin/login" className={cn("text-sm font-medium transition-colors hover:text-primary text-muted-foreground flex items-center gap-1", isNavLinkActive('/admin/login') && "text-primary")}>
+              <UserCog className="h-4 w-4" /> Admin
+            </Link>
         </nav>
         <button
           className="md:hidden ml-auto"
@@ -71,6 +74,16 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
+             <Link
+                href="/admin/login"
+                className={cn(
+                  "text-sm font-medium transition-colors hover:text-primary",
+                  isNavLinkActive('/admin/login') ? "text-primary" : "text-muted-foreground"
+                )}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Admin
+              </Link>
           </nav>
         </div>
       )}

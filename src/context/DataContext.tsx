@@ -16,6 +16,8 @@ type DataContextType = {
   tickets: Ticket[];
   users: User[];
   seatData: SeatData;
+  currentUser: User | null;
+  setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
   setGames: React.Dispatch<React.SetStateAction<Game[]>>;
   setTickets: React.Dispatch<React.SetStateAction<Ticket[]>>;
   setUsers: React.Dispatch<React.SetStateAction<User[]>>;
@@ -31,6 +33,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [tickets, setTickets] = useState<Ticket[]>(initialTickets);
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [seatData, setSeatData] = useState<SeatData>(initialSeatData);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   const addTicket = (ticket: Omit<Ticket, 'id'>) => {
     setTickets(prevTickets => [...prevTickets, { ...ticket, id: `t${prevTickets.length + 1}` }]);
@@ -50,7 +53,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <DataContext.Provider value={{ games, tickets, users, seatData, setGames, setTickets, setUsers, addTicket, addUser, updateSeatData }}>
+    <DataContext.Provider value={{ games, tickets, users, seatData, currentUser, setCurrentUser, setGames, setTickets, setUsers, addTicket, addUser, updateSeatData }}>
       {children}
     </DataContext.Provider>
   );

@@ -18,9 +18,7 @@ import type { Game, User, Ticket } from '@/lib/data';
 
 
 export default function SellPage() {
-  const { games, users, tickets, addTicket } = useData();
-  const [authState, setAuthState] = useState<'unauthenticated' | 'authenticated'>('unauthenticated');
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const { games, users, tickets, addTicket, currentUser, setCurrentUser } = useData();
   const [error, setError] = useState('');
   const [selectedGames, setSelectedGames] = useState<Game[]>([]);
   const [showSummary, setShowSummary] = useState(false);
@@ -37,14 +35,12 @@ export default function SellPage() {
     
     if (user) {
       setCurrentUser(user);
-      setAuthState('authenticated');
     } else {
       setError('Invalid credentials. Please check your email and password.');
     }
   };
 
   const handleLogout = () => {
-    setAuthState('unauthenticated');
     setCurrentUser(null);
     setSelectedGames([]);
     setShowSummary(false);
@@ -94,7 +90,7 @@ export default function SellPage() {
     setShowSummary(false);
   }
 
-  if (authState === 'unauthenticated') {
+  if (!currentUser) {
     return (
       <div className="container mx-auto px-4 md:px-6 py-12 md:py-20">
         <div className="text-center mb-16">
