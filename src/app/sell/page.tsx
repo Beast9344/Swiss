@@ -6,9 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { CheckCircle, AlertCircle, Ticket as TicketIcon } from 'lucide-react';
+import { CheckCircle, AlertCircle, Ticket as TicketIcon, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -232,37 +231,56 @@ export default function SellPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 md:px-6 py-12 md:py-20 space-y-8">
-      <Card className="w-full max-w-4xl mx-auto">
-        <CardHeader>
-          <CardTitle className="font-headline text-2xl">Sell Your Tickets</CardTitle>
-          <CardDescription>Select the games you won't be attending. We'll find a buyer for you.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {games.map(game => (
-              <div key={game.id} className="flex items-center space-x-4 p-4 border rounded-lg">
-                <Checkbox 
-                    id={`game-${game.id}`}
-                    onCheckedChange={(checked) => handleGameSelect(game, !!checked)}
-                    checked={selectedGames.some(g => g.id === game.id)}
+    <div className="container mx-auto px-4 md:px-6 py-12 md:py-20 space-y-12">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-4xl md:text-5xl font-headline font-bold text-primary mb-4">Choose the games you cannot attend</h1>
+        <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
+          <li>Select all games you cannot attend.</li>
+          <li>Confirm your choices.</li>
+          <li>Add your payment info to receive your payout.</li>
+        </ol>
+      </div>
+
+      <div className="space-y-4 max-w-4xl mx-auto">
+        {games.map(game => {
+          const isSelected = selectedGames.some(g => g.id === game.id);
+          return (
+            <div key={game.id} className="flex items-center justify-between p-4 border border-border rounded-lg bg-card/50 transition-all hover:border-primary/50">
+              <div className="flex items-center gap-6">
+                <Image 
+                  src={`https://placehold.co/100x100.png`} 
+                  data-ai-hint="soccer badge" 
+                  alt="Team Badge" 
+                  width={80} 
+                  height={80} 
+                  className="rounded-full" 
                 />
-                <label htmlFor={`game-${game.id}`} className="flex-1 flex items-center justify-between cursor-pointer">
-                    <div>
-                        <p className="font-medium">{game.teamA} vs {game.teamB}</p>
-                        <p className="text-sm text-muted-foreground">{new Date(game.date).toLocaleDateString()}</p>
-                    </div>
-                    <Image src={`https://placehold.co/40x40.png`} data-ai-hint="soccer badge" alt="Team Badge" width={40} height={40} className="rounded-full" />
-                </label>
+                <div className="space-y-1">
+                  <p className="font-bold text-xl">{new Date(game.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+                  <p className="font-medium text-lg">{game.teamA} vs {game.teamB}</p>
+                  <p className="text-sm text-muted-foreground">{game.venue}</p>
+                </div>
               </div>
-            ))}
-          </div>
-        </CardContent>
-        <CardFooter className="flex justify-between">
+              <Button
+                variant={isSelected ? 'default' : 'outline'}
+                className="w-48"
+                onClick={() => handleGameSelect(game, !isSelected)}
+              >
+                <span>I want to sell</span>
+                <CheckCircle className="ml-2 h-5 w-5" />
+              </Button>
+            </div>
+          );
+        })}
+      </div>
+      
+      <div className="flex justify-between items-center max-w-4xl mx-auto">
           <Button variant="outline" onClick={handleLogout}>Logout</Button>
-          <Button onClick={handleListTickets} className="ml-auto">List Tickets</Button>
-        </CardFooter>
-      </Card>
+          <Button onClick={handleListTickets} disabled={selectedGames.length === 0} size="lg">
+              Confirm choices and proceed
+              <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+      </div>
 
       <Card className="w-full max-w-4xl mx-auto">
           <CardHeader>
