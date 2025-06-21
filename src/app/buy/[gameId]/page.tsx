@@ -21,6 +21,7 @@ export default function GamePage({ params }: { params: any }) {
   const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('card');
 
 
@@ -37,10 +38,10 @@ export default function GamePage({ params }: { params: any }) {
       });
       return;
     }
-    if (!fullName || !email) {
+    if (!fullName || !email || !password) {
       toast({
         title: "Missing Information",
-        description: "Please enter your full name and email address.",
+        description: "Please enter your full name, email address, and password.",
         variant: "destructive",
       });
       return;
@@ -56,6 +57,7 @@ export default function GamePage({ params }: { params: any }) {
     setSelectedSeat(null);
     setFullName('');
     setEmail('');
+    setPassword('');
   };
 
   return (
@@ -142,6 +144,10 @@ export default function GamePage({ params }: { params: any }) {
                         <div className="space-y-2">
                             <Label htmlFor="email">Email Address</Label>
                             <Input id="email" type="email" placeholder="john.doe@example.com" value={email} onChange={e => setEmail(e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="password">Password</Label>
+                            <Input id="password" type="password" placeholder="********" value={password} onChange={e => setPassword(e.target.value)} />
                         </div>
                     </div>
                 </div>
