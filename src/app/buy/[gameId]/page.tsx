@@ -1,7 +1,7 @@
 import { games, seatData } from "@/lib/data"
 import { notFound } from "next/navigation"
 import Image from "next/image"
-import { Calendar, MapPin, Ticket, CreditCard } from "lucide-react"
+import { CalendarDays, MapPin, Ticket, CreditCard } from "lucide-react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import SeatMap from "@/components/seat-map"
@@ -32,7 +32,7 @@ export default function GamePage({ params }: { params: { gameId: string } }) {
           <h1 className="text-4xl md:text-6xl font-headline font-bold text-primary">{game.teamA} vs {game.teamB}</h1>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-4 text-lg text-muted-foreground">
             <div className="flex items-center gap-2">
-              <Calendar className="h-5 w-5" />
+              <CalendarDays className="h-5 w-5" />
               <span>{new Date(game.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
             </div>
             <div className="flex items-center gap-2">

@@ -9,7 +9,7 @@ import {
   SidebarInset,
   SidebarFooter,
 } from "@/components/ui/sidebar";
-import { Home, Ticket, Users, Calendar, LogOut } from "lucide-react";
+import { LayoutDashboard, Ticket, Users, CalendarDays, LogOut } from "lucide-react";
 
 export default function AdminLayout({
   children,
@@ -24,7 +24,7 @@ export default function AdminLayout({
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Dashboard">
                 <Link href="/admin">
-                  <Home />
+                  <LayoutDashboard />
                   Dashboard
                 </Link>
               </SidebarMenuButton>
@@ -48,7 +48,7 @@ export default function AdminLayout({
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Games">
                 <Link href="/admin/games">
-                  <Calendar />
+                  <CalendarDays />
                   Game Schedule
                 </Link>
               </SidebarMenuButton>

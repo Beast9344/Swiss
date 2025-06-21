@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DollarSign, Ticket, Clock, CheckCircle, BarChart } from "lucide-react";
+import { DollarSign, Ticket, Clock, CheckCircle, BarChart3 } from "lucide-react";
 import { tickets, users, games } from "@/lib/data";
 import {
   Table,
@@ -113,7 +113,7 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent className="pl-2">
               <div className="h-[350px] flex items-center justify-center text-muted-foreground">
-                  <BarChart className="h-16 w-16" />
+                  <BarChart3 className="h-16 w-16" />
                   <p className="ml-4">Chart placeholder</p>
               </div>
             </CardContent>

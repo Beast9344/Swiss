@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Game } from '@/lib/data';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Calendar } from 'lucide-react';
+import { ArrowRight, CalendarDays } from 'lucide-react';
 import { Badge } from './ui/badge';
 
 interface GameCardProps {
@@ -33,7 +33,7 @@ export function GameCard({ game }: GameCardProps) {
         </Badge>
         <CardTitle className="font-headline text-xl mb-2">{game.teamA} vs {game.teamB}</CardTitle>
         <div className="text-sm text-muted-foreground flex items-center gap-2">
-          <Calendar className="h-4 w-4" />
+          <CalendarDays className="h-4 w-4" />
           <span>{new Date(game.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
         </div>
       </CardContent>
