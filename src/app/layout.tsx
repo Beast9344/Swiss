@@ -27,6 +27,7 @@ export default function RootLayout({
           'relative h-full font-body antialiased',
           'flex flex-col'
         )}
+        suppressHydrationWarning={true}
       >
         <Header />
         <main className="flex-1">{children}</main>
