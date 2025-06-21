@@ -1,20 +1,47 @@
+"use client"
+
+import { useState } from "react";
 import { games, seatData } from "@/lib/data"
 import { notFound } from "next/navigation"
 import Image from "next/image"
 import { CalendarDays, MapPin, Ticket, CreditCard } from "lucide-react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import SeatMap from "@/components/seat-map"
+import SeatMap, { type Seat } from "@/components/seat-map"
 import { Separator } from "@/components/ui/separator"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useToast } from "@/hooks/use-toast";
 
 export default function GamePage({ params }: { params: { gameId: string } }) {
   const game = games.find(g => g.id === params.gameId)
+  const { toast } = useToast();
+  const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
 
   if (!game) {
     notFound()
   }
+
+  const handlePurchase = () => {
+    if (!selectedSeat) {
+      toast({
+        title: "No Seat Selected",
+        description: "Please select a seat before purchasing.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Purchase Successful!",
+      description: `You've successfully purchased seat ${selectedSeat.section}${selectedSeat.row}-${selectedSeat.seat}. Your tickets are on their way.`,
+    });
+
+    // In a real app, you would add the purchased seat to the unavailable list
+    // and likely redirect to a confirmation page.
+    setSelectedSeat(null);
+    // You might also want to clear payment fields here.
+  };
 
   return (
     <div className="bg-background">
@@ -52,7 +79,12 @@ export default function GamePage({ params }: { params: { gameId: string } }) {
                 <CardDescription>Click on an available seat to add it to your cart. Unavailable seats are greyed out.</CardDescription>
               </CardHeader>
               <CardContent>
-                <SeatMap seatData={seatData} basePrice={game.basePrice} />
+                <SeatMap 
+                  seatData={seatData} 
+                  basePrice={game.basePrice}
+                  selectedSeat={selectedSeat}
+                  onSeatSelect={setSelectedSeat}
+                />
               </CardContent>
             </Card>
           </div>
@@ -65,7 +97,24 @@ export default function GamePage({ params }: { params: { gameId: string } }) {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div id="order-summary" className="space-y-2">
-                    <p className="text-center text-muted-foreground">No seats selected</p>
+                    {selectedSeat ? (
+                      <>
+                        <div className="flex justify-between font-medium">
+                          <span>Seat: {selectedSeat.section}{selectedSeat.row}-{selectedSeat.seat}</span>
+                          <span>£{selectedSeat.price.toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between text-muted-foreground text-sm">
+                          <span>Taxes & Fees</span>
+                          <span>£{(selectedSeat.price * 0.1).toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between font-bold text-lg pt-2 border-t mt-2">
+                          <span>Total</span>
+                          <span>£{(selectedSeat.price * 1.1).toFixed(2)}</span>
+                        </div>
+                      </>
+                    ) : (
+                      <p className="text-center text-muted-foreground">No seats selected</p>
+                    )}
                 </div>
                 <Separator />
                 <div>
@@ -97,7 +146,7 @@ export default function GamePage({ params }: { params: { gameId: string } }) {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button size="lg" className="w-full bg-accent hover:bg-accent/90">
+                <Button size="lg" className="w-full bg-accent hover:bg-accent/90" onClick={handlePurchase}>
                   Purchase Tickets
                 </Button>
               </CardFooter>

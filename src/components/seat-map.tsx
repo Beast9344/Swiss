@@ -1,9 +1,15 @@
 "use client"
 
-import { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from '@/lib/utils';
+
+export type Seat = {
+  section: string;
+  row: number;
+  seat: number;
+  price: number;
+};
 
 interface SeatMapProps {
   seatData: {
@@ -11,53 +17,20 @@ interface SeatMapProps {
     unavailableSeats: string[];
   };
   basePrice: number;
+  selectedSeat: Seat | null;
+  onSeatSelect: (seat: Seat | null) => void;
 }
 
-type Seat = {
-  section: string;
-  row: number;
-  seat: number;
-  price: number;
-};
-
-export default function SeatMap({ seatData, basePrice }: SeatMapProps) {
-  const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
-
+export default function SeatMap({ seatData, basePrice, selectedSeat, onSeatSelect }: SeatMapProps) {
   const handleSeatClick = (sectionName: string, row: number, seat: number, price: number, isAvailable: boolean) => {
     if (!isAvailable) return;
     
     const newSelectedSeat = { section: sectionName, row, seat, price };
     
     if (selectedSeat && selectedSeat.section === sectionName && selectedSeat.row === row && selectedSeat.seat === seat) {
-      setSelectedSeat(null);
-      updateOrderSummary(null);
+      onSeatSelect(null);
     } else {
-      setSelectedSeat(newSelectedSeat);
-      updateOrderSummary(newSelectedSeat);
-    }
-  };
-
-  const updateOrderSummary = (seat: Seat | null) => {
-    const summaryDiv = document.getElementById('order-summary');
-    if (summaryDiv) {
-      if (seat) {
-        summaryDiv.innerHTML = `
-          <div class="flex justify-between font-medium">
-            <span>Seat: ${seat.section}${seat.row}-${seat.seat}</span>
-            <span>£${seat.price.toFixed(2)}</span>
-          </div>
-          <div class="flex justify-between text-muted-foreground text-sm">
-            <span>Taxes & Fees</span>
-            <span>£${(seat.price * 0.1).toFixed(2)}</span>
-          </div>
-           <div class="flex justify-between font-bold text-lg pt-2 border-t mt-2">
-            <span>Total</span>
-            <span>£${(seat.price * 1.1).toFixed(2)}</span>
-          </div>
-        `;
-      } else {
-        summaryDiv.innerHTML = '<p class="text-center text-muted-foreground">No seats selected</p>';
-      }
+      onSeatSelect(newSelectedSeat);
     }
   };
 
