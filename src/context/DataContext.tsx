@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useCallback, useMemo } from 'react';
 import { 
     games as initialGames, 
     tickets as initialTickets, 
@@ -11,7 +11,6 @@ import type { Game, Ticket, User } from '@/lib/data';
 
 type SeatData = typeof initialSeatData;
 
-// A more robust ID generator to prevent key collision issues in React.
 const generateId = (prefix: string) => `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
 
 type DataContextType = {
@@ -39,34 +38,50 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [seatData, setSeatData] = useState<SeatData>(initialSeatData);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
-  const addTicket = (ticket: Omit<Ticket, 'id'>) => {
+  const addTicket = useCallback((ticket: Omit<Ticket, 'id'>) => {
     const newTicket = { ...ticket, id: generateId('t') };
     setTickets(prevTickets => [...prevTickets, newTicket]);
-  };
+  }, []);
 
-  const addUser = (user: Omit<User, 'id'>) => {
+  const addUser = useCallback((user: Omit<User, 'id'>) => {
     const newUser = { ...user, id: generateId('u') };
     setUsers(prevUsers => [...prevUsers, newUser]);
     return newUser;
-  };
+  }, []);
 
-  const updateSeatData = (newUnavailableSeat: string) => {
+  const updateSeatData = useCallback((newUnavailableSeat: string) => {
     setSeatData(prevSeatData => ({
       ...prevSeatData,
       unavailableSeats: [...prevSeatData.unavailableSeats, newUnavailableSeat],
     }));
-  };
+  }, []);
 
-  const updateTicket = (ticketId: string, updates: Partial<Ticket>) => {
+  const updateTicket = useCallback((ticketId: string, updates: Partial<Ticket>) => {
     setTickets(prevTickets =>
       prevTickets.map(ticket =>
         ticket.id === ticketId ? { ...ticket, ...updates } : ticket
       )
     );
-  };
+  }, []);
+
+  const contextValue = useMemo(() => ({
+    games,
+    tickets,
+    users,
+    seatData,
+    currentUser,
+    setCurrentUser,
+    setGames,
+    setTickets,
+    setUsers,
+    addTicket,
+    addUser,
+    updateSeatData,
+    updateTicket
+  }), [games, tickets, users, seatData, currentUser, addTicket, addUser, updateSeatData, updateTicket]);
 
   return (
-    <DataContext.Provider value={{ games, tickets, users, seatData, currentUser, setCurrentUser, setGames, setTickets, setUsers, addTicket, addUser, updateSeatData, updateTicket }}>
+    <DataContext.Provider value={contextValue}>
       {children}
     </DataContext.Provider>
   );
