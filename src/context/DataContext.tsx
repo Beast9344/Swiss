@@ -1,7 +1,7 @@
 
 'use client';
 
-import { createContext, useContext, useReducer, ReactNode, useMemo, useCallback } from 'react';
+import { createContext, useContext, useReducer, ReactNode, useCallback } from 'react';
 import { 
     games as initialGames, 
     tickets as initialTickets, 
@@ -135,7 +135,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       dispatch({ type: ActionType.SET_USERS, payload: typeof setter === 'function' ? setter(state.users) : setter });
   }, [state.users]);
 
-  const contextValue = useMemo(() => ({
+  const contextValue = {
     ...state,
     setCurrentUser,
     addUser,
@@ -145,7 +145,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setGames,
     setTickets,
     setUsers,
-  }), [state, setCurrentUser, addUser, addTicket, updateSeatData, updateTicket, setGames, setTickets, setUsers]);
+  };
 
   return (
     <DataContext.Provider value={contextValue}>
