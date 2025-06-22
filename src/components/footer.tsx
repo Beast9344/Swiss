@@ -49,7 +49,7 @@ export function Footer() {
             <ul className="space-y-3 text-sm text-muted-foreground">
                 <li className="flex items-center gap-3">
                     <Mail className="h-5 w-5 text-primary"/>
-                    <a href="mailto:support@seatswap.com" className="hover:text-primary transition-colors">support@seatswap.com</a>
+                    <a href="mailto:support@swiss.com" className="hover:text-primary transition-colors">support@swiss.com</a>
                 </li>
                 <li className="flex items-center gap-3">
                     <Phone className="h-5 w-5 text-primary"/>
@@ -72,7 +72,7 @@ export function Footer() {
         </div>
         <Separator className="my-8 bg-border/50" />
         <div className="text-center text-sm text-muted-foreground">
-          &copy; {new Date().getFullYear()} SeatSwap. All rights reserved.
+          &copy; {new Date().getFullYear()} Swiss. All rights reserved.
         </div>
       </div>
     </footer>

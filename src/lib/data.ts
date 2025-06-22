@@ -41,7 +41,7 @@ export const games: Game[] = [
 ];
 
 export const users: User[] = [
-    { id: 'admin', name: 'Admin User', email: 'admin@seatswap.com', type: 'admin', password: 'admin', purchasedTickets: [] },
+    { id: 'admin', name: 'Admin User', email: 'admin@swiss.com', type: 'admin', password: 'admin', purchasedTickets: [] },
     { id: 'u-1', name: 'Alice Johnson', email: 'alice@example.com', type: 'seller', password: 'password123', purchasedTickets: ['t-1', 't-2'] },
     { id: 'u-2', name: 'Bob Williams', email: 'bob@example.com', type: 'seller', password: 'password123', purchasedTickets: ['t-3'] },
     { id: 'u-3', name: 'Charlie Brown', email: 'charlie@example.com', type: 'buyer', password: 'password123', purchasedTickets: ['t-4'] }

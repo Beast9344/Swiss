@@ -29,7 +29,7 @@ export default function Home() {
       <section className="relative w-full py-20 md:py-32 lg:py-40 bg-card/50">
         <div className="container mx-auto px-4 md:px-6 text-center">
           <h1 className="text-4xl md:text-6xl font-headline font-bold text-primary tracking-tighter mb-4 uppercase">
-            SeatSwap: Get Your Seat and Game on!
+            Swiss: Get Your Seat and Game on!
           </h1>
           <div className="max-w-3xl mx-auto text-lg md:text-xl text-muted-foreground mb-8 space-y-2">
             <p>Do you want to attend a game but it is sold out? We got you covered!</p>

@@ -24,7 +24,7 @@ export default function ContactPage() {
                 <CardContent className="space-y-4 text-muted-foreground">
                     <div className="flex items-center gap-4">
                         <Mail className="h-6 w-6 text-primary"/>
-                        <a href="mailto:support@seatswap.com" className="hover:text-primary">support@seatswap.com</a>
+                        <a href="mailto:support@swiss.com" className="hover:text-primary">support@swiss.com</a>
                     </div>
                     <div className="flex items-center gap-4">
                         <Phone className="h-6 w-6 text-primary"/>

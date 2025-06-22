@@ -124,7 +124,7 @@ export default function GamePage() {
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-        pdf.save("SeatSwap-Ticket-Receipt.pdf");
+        pdf.save("Swiss-Ticket-Receipt.pdf");
       });
     }
   };

@@ -56,7 +56,7 @@ export default function AdminLoginPage() {
                         )}
                         <div className="space-y-2">
                             <Label htmlFor="email">Email</Label>
-                            <Input id="email" name="email" type="email" placeholder="admin@example.com" required defaultValue="admin@seatswap.com" />
+                            <Input id="email" name="email" type="email" placeholder="admin@example.com" required defaultValue="admin@swiss.com" />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="password">Password</Label>

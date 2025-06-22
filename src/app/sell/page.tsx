@@ -107,7 +107,7 @@ export default function SellPage() {
               <div className="relative">
                 <div className="absolute -left-12 top-0 flex-shrink-0 bg-card h-8 w-8 rounded-full border-2 border-primary flex items-center justify-center font-bold text-primary z-10">1</div>
                 <h3 className="font-bold text-lg mb-1">Log in with your club's account</h3>
-                <p className="text-muted-foreground">Access your club's season ticket by securely logging in through the SeatSwap platform using your club's credentials. <span className="text-primary/70">(OAuth-style authentication)</span></p>
+                <p className="text-muted-foreground">Access your club's season ticket by securely logging in through the Swiss platform using your club's credentials. <span className="text-primary/70">(OAuth-style authentication)</span></p>
               </div>
 
               <div className="relative">

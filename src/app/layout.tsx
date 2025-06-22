@@ -22,7 +22,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: 'SeatSwap - The Premier Ticket Resale Platform',
+  title: 'Swiss - The Premier Ticket Resale Platform',
   description: 'Easily buy and sell seasonal sports tickets.',
 };
 
