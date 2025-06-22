@@ -59,17 +59,24 @@ const initialState: State = {
 function dataReducer(state: State, action: Action): State {
   switch (action.type) {
     case ActionType.ADD_USER:
+      // Return a new state object with a new users array
       return { ...state, users: [...state.users, action.payload] };
+      
     case ActionType.ADD_TICKET:
+      // Return a new state object with a new tickets array
       return { ...state, tickets: [...state.tickets, action.payload] };
+
     case ActionType.UPDATE_TICKET:
+      // Return a new state object with a new tickets array
       return {
         ...state,
         tickets: state.tickets.map(t =>
           t.id === action.payload.ticketId ? { ...t, ...action.payload.updates } : t
         ),
       };
+      
     case ActionType.UPDATE_SEAT_DATA:
+      // Return a new state object with a new seatData object and a new unavailableSeats array
       return {
         ...state,
         seatData: {
@@ -77,16 +84,22 @@ function dataReducer(state: State, action: Action): State {
           unavailableSeats: [...state.seatData.unavailableSeats, action.payload],
         },
       };
+
     case ActionType.SET_CURRENT_USER:
       return { ...state, currentUser: action.payload };
+
     case ActionType.SET_GAMES:
       return { ...state, games: action.payload };
+
     case ActionType.SET_TICKETS:
       return { ...state, tickets: action.payload };
+
     case ActionType.REMOVE_GAME:
       return { ...state, games: state.games.filter(g => g.id !== action.payload) };
+
     case ActionType.REMOVE_TICKET:
         return { ...state, tickets: state.tickets.filter(t => t.id !== action.payload) };
+
     default:
       // This is a safe way to handle unhandled actions in TypeScript
       const _: never = action;
