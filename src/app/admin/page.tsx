@@ -6,7 +6,8 @@ import { DollarSign, Ticket, Clock, CheckCircle, BarChart3 } from "lucide-react"
 import RecentSales from "@/components/RecentSales";
 
 export default function AdminDashboard() {
-  const { tickets } = useData();
+  const { state } = useData();
+  const { tickets } = state;
 
   const totalListed = tickets.length;
   const pendingApprovals = tickets.filter(t => t.status === 'pending').length;

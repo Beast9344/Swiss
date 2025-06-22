@@ -1,6 +1,6 @@
 "use client";
 
-import { useData } from '@/context/DataContext';
+import { useData, ActionType } from '@/context/DataContext';
 import type { Ticket } from "@/lib/data";
 import {
   Table,
@@ -26,15 +26,15 @@ import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 
 export default function AdminTicketsPage() {
-  const { tickets, setTickets, games, users } = useData();
+  const { state, dispatch } = useData();
+  const { tickets, games, users } = state;
   const { toast } = useToast();
 
   const handleStatusChange = (ticketId: string, status: 'listed' | 'rejected') => {
-    setTickets(prevTickets =>
-      prevTickets.map(ticket =>
-        ticket.id === ticketId ? { ...ticket, status } : ticket
-      )
-    );
+    dispatch({ 
+        type: ActionType.UPDATE_TICKET, 
+        payload: { ticketId, updates: { status } } 
+    });
     toast({
         title: `Ticket ${status}`,
         description: `The ticket has been successfully marked as ${status}.`
@@ -42,8 +42,8 @@ export default function AdminTicketsPage() {
   };
 
   const handleRemove = (ticketId: string) => {
-    setTickets(prevTickets => prevTickets.filter(ticket => ticket.id !== ticketId));
-     toast({
+    dispatch({ type: ActionType.REMOVE_TICKET, payload: ticketId });
+    toast({
         title: `Ticket Removed`,
         description: `The ticket has been removed from the listings.`,
         variant: "destructive"

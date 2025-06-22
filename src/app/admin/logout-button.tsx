@@ -1,16 +1,16 @@
 'use client';
 
 import { useRouter } from "next/navigation";
-import { useData } from "@/context/DataContext";
+import { useData, ActionType } from "@/context/DataContext";
 import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { LogOut } from "lucide-react";
 
 export function LogoutButton() {
-    const { setCurrentUser } = useData();
+    const { dispatch } = useData();
     const router = useRouter();
 
     const handleLogout = () => {
-        setCurrentUser(null);
+        dispatch({ type: ActionType.SET_CURRENT_USER, payload: null });
         router.push('/');
     };
     

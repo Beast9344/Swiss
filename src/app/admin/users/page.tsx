@@ -15,7 +15,8 @@ import { Download } from "lucide-react";
 import { Card, CardContent } from '@/components/ui/card';
 
 export default function AdminUsersPage() {
-  const { users } = useData();
+  const { state } = useData();
+  const { users } = state;
   
   return (
     <div className="flex h-full flex-col">
@@ -42,7 +43,7 @@ export default function AdminUsersPage() {
                       <TableHead>Password</TableHead>
                       <TableHead>User Type</TableHead>
                       <TableHead>User ID</TableHead>
- <TableHead>Tickets Bought</TableHead>
+                      <TableHead>Tickets Bought</TableHead>
                   </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -57,7 +58,7 @@ export default function AdminUsersPage() {
                           </Badge>
                       </TableCell>
                       <TableCell>{user.id}</TableCell>
- <TableCell>{user.purchasedTickets?.length ?? 0}</TableCell>
+                      <TableCell>{user.purchasedTickets?.length ?? 0}</TableCell>
                       </TableRow>
                   ))}
                   </TableBody>

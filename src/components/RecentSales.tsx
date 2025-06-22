@@ -4,7 +4,8 @@ import { useData } from "@/context/DataContext";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export default function RecentSales() {
-  const { tickets, users } = useData();
+  const { state } = useData();
+  const { tickets, users } = state;
 
   const recentSales = tickets
     .filter((ticket) => ticket.status === "sold" && ticket.purchaseDate)

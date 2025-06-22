@@ -12,12 +12,13 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { cn } from '@/lib/utils';
-import { useData } from '@/context/DataContext';
+import { useData, ActionType } from '@/context/DataContext';
 import type { Ticket } from '@/lib/data';
 
 
 export default function SellPage() {
-  const { games, users, tickets, currentUser, setCurrentUser, updateTicket } = useData();
+  const { state, dispatch } = useData();
+  const { games, users, tickets, currentUser } = state;
   const [error, setError] = useState('');
   const { toast } = useToast();
   const [showLogin, setShowLogin] = useState(false);
@@ -32,18 +33,21 @@ export default function SellPage() {
     const user = users.find(u => u.email === email && u.password === password);
     
     if (user) {
-      setCurrentUser(user);
+      dispatch({ type: ActionType.SET_CURRENT_USER, payload: user });
     } else {
       setError('Invalid credentials. Please check your email and password.');
     }
   };
 
   const handleLogout = () => {
-    setCurrentUser(null);
+    dispatch({ type: ActionType.SET_CURRENT_USER, payload: null });
   };
 
   const handleResellTicket = (ticketId: string) => {
-    updateTicket(ticketId, { status: 'pending' });
+    dispatch({
+      type: ActionType.UPDATE_TICKET,
+      payload: { ticketId, updates: { status: 'pending' } }
+    });
     toast({
       title: "Ticket Listed for Resale",
       description: "Your ticket has been submitted for approval and will be listed shortly.",
