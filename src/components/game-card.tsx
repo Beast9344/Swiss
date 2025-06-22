@@ -20,9 +20,8 @@ export function GameCard({ game }: GameCardProps) {
           <Image
             src={`https://placehold.co/200x200.png`}
             alt="Team Badge"
-            layout="fill"
-            objectFit="cover"
-            className="rounded-full ring-4 ring-primary/20"
+            fill
+            className="rounded-full ring-4 ring-primary/20 object-cover"
             data-ai-hint="soccer badge"
           />
         </div>

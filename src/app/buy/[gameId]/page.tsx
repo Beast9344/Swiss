@@ -126,9 +126,8 @@ export default function GamePage({ params }: { params: any }) {
         <Image
           src="https://placehold.co/1920x1080.png"
           alt="Stadium background"
-          layout="fill"
-          objectFit="cover"
-          className="opacity-10 brightness-50"
+          fill
+          className="opacity-10 brightness-50 object-cover"
           data-ai-hint="stadium lights"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
