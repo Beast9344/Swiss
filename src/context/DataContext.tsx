@@ -37,11 +37,14 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   const addTicket = (ticket: Omit<Ticket, 'id'>) => {
-    setTickets(prevTickets => [...prevTickets, { ...ticket, id: `t${prevTickets.length + 1}` }]);
+    // Using a more robust unique ID to prevent conflicts and ensure updates propagate.
+    const newTicket = { ...ticket, id: `t${Date.now()}` };
+    setTickets(prevTickets => [...prevTickets, newTicket]);
   };
 
   const addUser = (user: Omit<User, 'id'>) => {
-    const newUser = { ...user, id: `u${users.length + 1}` };
+    // Using a more robust unique ID to prevent conflicts and ensure the new user is returned correctly.
+    const newUser = { ...user, id: `u${Date.now()}` };
     setUsers(prevUsers => [...prevUsers, newUser]);
     return newUser;
   };
