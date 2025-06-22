@@ -4,8 +4,6 @@ import {
     createContext,
     useContext,
     useState,
-    useMemo,
-    useCallback,
     ReactNode,
     Dispatch,
     SetStateAction,
@@ -23,17 +21,18 @@ type SeatData = {
     unavailableSeats: string[];
 };
 
-// New Context Shape
 interface DataContextType {
   games: Game[];
-  tickets: Ticket[];
-  users: User[];
-  seatData: SeatData;
-  currentUser: User | null;
-  
   setGames: Dispatch<SetStateAction<Game[]>>;
+  tickets: Ticket[];
+  setTickets: Dispatch<SetStateAction<Ticket[]>>;
+  users: User[];
+  setUsers: Dispatch<SetStateAction<User[]>>;
+  seatData: SeatData;
+  setSeatData: Dispatch<SetStateAction<SeatData>>;
+  currentUser: User | null;
   setCurrentUser: Dispatch<SetStateAction<User | null>>;
-
+  
   addUser: (user: User) => void;
   addTicket: (ticket: Ticket) => void;
   updateTicket: (ticketId: string, updates: Partial<Ticket>) => void;
@@ -51,40 +50,45 @@ export function DataProvider({ children }: { children: ReactNode }) {
     const [seatData, setSeatData] = useState<SeatData>(initialSeatData);
     const [currentUser, setCurrentUser] = useState<User | null>(null);
 
-    const addUser = useCallback((user: User) => {
-        setUsers(prev => [...prev, user]);
-    }, []);
+    const addUser = (user: User) => {
+        setUsers(prevUsers => [...prevUsers, user]);
+    };
 
-    const addTicket = useCallback((ticket: Ticket) => {
-        setTickets(prev => [...prev, ticket]);
-    }, []);
+    const addTicket = (ticket: Ticket) => {
+        setTickets(prevTickets => [...prevTickets, ticket]);
+    };
 
-    const updateTicket = useCallback((ticketId: string, updates: Partial<Ticket>) => {
-        setTickets(prev => prev.map(t => t.id === ticketId ? { ...t, ...updates } : t));
-    }, []);
+    const updateTicket = (ticketId: string, updates: Partial<Ticket>) => {
+        setTickets(prevTickets => 
+            prevTickets.map(t => t.id === ticketId ? { ...t, ...updates } : t)
+        );
+    };
 
-    const updateSeatData = useCallback((seatId: string) => {
-        setSeatData(prev => ({
-            ...prev,
-            unavailableSeats: [...prev.unavailableSeats, seatId],
+    const updateSeatData = (seatId: string) => {
+        setSeatData(prevSeatData => ({
+            ...prevSeatData,
+            unavailableSeats: [...prevSeatData.unavailableSeats, seatId],
         }));
-    }, []);
+    };
 
-    const removeGame = useCallback((gameId: string) => {
-        setGames(prev => prev.filter(g => g.id !== gameId));
-    }, []);
+    const removeGame = (gameId: string) => {
+        setGames(prevGames => prevGames.filter(g => g.id !== gameId));
+    };
 
-    const removeTicket = useCallback((ticketId: string) => {
-        setTickets(prev => prev.filter(t => t.id !== ticketId));
-    }, []);
+    const removeTicket = (ticketId: string) => {
+        setTickets(prevTickets => prevTickets.filter(t => t.id !== ticketId));
+    };
     
-    const value = useMemo(() => ({
+    const value: DataContextType = {
         games,
-        tickets,
-        users,
-        seatData,
-        currentUser,
         setGames,
+        tickets,
+        setTickets,
+        users,
+        setUsers,
+        seatData,
+        setSeatData,
+        currentUser,
         setCurrentUser,
         addUser,
         addTicket,
@@ -92,7 +96,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         updateSeatData,
         removeGame,
         removeTicket,
-    }), [games, tickets, users, seatData, currentUser, addUser, addTicket, updateTicket, updateSeatData, removeGame, removeTicket]);
+    };
 
     return (
         <DataContext.Provider value={value}>
