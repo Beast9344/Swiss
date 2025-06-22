@@ -9,6 +9,7 @@ import { GameCard } from '@/components/game-card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { useData } from '@/context/DataContext';
+import Image from 'next/image';
 
 export default function Home() {
   const { games } = useData();
@@ -26,12 +27,19 @@ export default function Home() {
 
   return (
     <>
-      <section className="relative w-full py-20 md:py-32 lg:py-40 bg-card/50">
-        <div className="container mx-auto px-4 md:px-6 text-center">
+      <section className="relative w-full py-20 md:py-32 lg:py-40 flex items-center justify-center">
+        <Image
+          src="https://placehold.co/1920x1080.png"
+          alt="Stadium background"
+          fill
+          className="object-cover -z-10 brightness-50"
+          data-ai-hint="stadium soccer"
+        />
+        <div className="relative container mx-auto px-4 md:px-6 text-center">
           <h1 className="text-4xl md:text-6xl font-headline font-bold text-primary tracking-tighter mb-4 uppercase">
             Swiss: Get Your Seat and Game on!
           </h1>
-          <div className="max-w-3xl mx-auto text-lg md:text-xl text-muted-foreground mb-8 space-y-2">
+          <div className="max-w-3xl mx-auto text-lg md:text-xl text-foreground/90 mb-8 space-y-2">
             <p>Do you want to attend a game but it is sold out? We got you covered!</p>
             <p>Resell or buy tickets here.</p>
             <p className="text-base">We believe in sharing value. Our platform ensures that ever empty seat becomes an opportunity for someone to feel good, form seller to buyer.</p>
@@ -48,7 +56,6 @@ export default function Home() {
             </Button>
           </div>
         </div>
-        <div className="absolute inset-0 -z-10 h-full w-full bg-background [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
       </section>
 
       <section className="py-16 md:py-24 bg-background">
