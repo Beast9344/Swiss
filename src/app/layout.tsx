@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Toaster } from "@/components/ui/toaster"
-import { Inter, Literata } from 'next/font/google';
+import { Inter, Russo_One } from 'next/font/google';
 import { DataProvider } from '@/context/DataContext';
 
 const inter = Inter({
@@ -14,10 +14,10 @@ const inter = Inter({
   display: 'swap',
 });
 
-const literata = Literata({
+const russo_one = Russo_One({
   subsets: ['latin'],
-  variable: '--font-literata',
-  weight: ['400', '700'],
+  variable: '--font-headline',
+  weight: ['400'],
   display: 'swap',
 });
 
@@ -32,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("h-full", inter.variable, literata.variable)}>
+    <html lang="en" className={cn("h-full", inter.variable, russo_one.variable)}>
       <head />
       <body
         className={cn(
