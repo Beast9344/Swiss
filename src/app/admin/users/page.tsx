@@ -13,10 +13,23 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { Card, CardContent } from '@/components/ui/card';
+import { exportToCsv } from "@/lib/utils";
 
 export default function AdminUsersPage() {
   const { state } = useData();
   const { users } = state;
+
+  const handleExport = () => {
+    // Exclude password from the export for security
+    const exportableData = users.map(u => ({
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        type: u.type,
+        purchasedTickets: u.purchasedTickets?.length ?? 0
+    }));
+    exportToCsv('users.csv', exportableData);
+  };
   
   return (
     <div className="flex h-full flex-col">
@@ -26,7 +39,7 @@ export default function AdminUsersPage() {
               <h2 className="text-3xl font-bold tracking-tight font-headline">User Management</h2>
               <p className="text-muted-foreground">View all sellers and buyers on the platform.</p>
           </div>
-          <Button>
+          <Button onClick={handleExport}>
               <Download className="mr-2 h-4 w-4" />
               Export CSV
           </Button>

@@ -30,21 +30,31 @@ export type User = {
 };
 
 export const games: Game[] = [
-  { id: '1', teamA: 'Arsenal', teamB: 'Chelsea', date: '2025-07-15', status: 'Tickets Available', venue: 'Emirates Stadium', basePrice: 70 },
-  { id: '2', teamA: 'Liverpool', teamB: 'Arsenal', date: '2025-07-22', status: 'No Tickets Yet', venue: 'Anfield', basePrice: 80 },
-  { id: '3', teamA: 'Arsenal', teamB: 'Manchester City', date: '2025-08-05', status: 'Tickets Available', venue: 'Emirates Stadium', basePrice: 85 },
-  { id: '4', teamA: 'Tottenham', teamB: 'Arsenal', date: '2025-08-12', status: 'Tickets Available', venue: 'Tottenham Hotspur Stadium', basePrice: 75 },
-  { id: '5', teamA: 'Arsenal', teamB: 'Manchester United', date: '2025-08-19', status: 'No Tickets Yet', venue: 'Emirates Stadium', basePrice: 90 },
-  { id: '6', teamA: 'Manchester City', teamB: 'Chelsea', date: '2025-07-19', status: 'Tickets Available', venue: 'Etihad Stadium', basePrice: 72 },
-  { id: '7', teamA: 'Manchester United', teamB: 'Liverpool', date: '2025-07-26', status: 'Tickets Available', venue: 'Old Trafford', basePrice: 88 },
-  { id: '8', teamA: 'Chelsea', teamB: 'Tottenham', date: '2025-08-02', status: 'No Tickets Yet', venue: 'Stamford Bridge', basePrice: 78 },
+  { id: 'g-1', teamA: 'Arsenal', teamB: 'Chelsea', date: '2025-07-15', status: 'Tickets Available', venue: 'Emirates Stadium', basePrice: 70 },
+  { id: 'g-2', teamA: 'Liverpool', teamB: 'Arsenal', date: '2025-07-22', status: 'No Tickets Yet', venue: 'Anfield', basePrice: 80 },
+  { id: 'g-3', teamA: 'Arsenal', teamB: 'Manchester City', date: '2025-08-05', status: 'Tickets Available', venue: 'Emirates Stadium', basePrice: 85 },
+  { id: 'g-4', teamA: 'Tottenham', teamB: 'Arsenal', date: '2025-08-12', status: 'Tickets Available', venue: 'Tottenham Hotspur Stadium', basePrice: 75 },
+  { id: 'g-5', teamA: 'Arsenal', teamB: 'Manchester United', date: '2025-08-19', status: 'No Tickets Yet', venue: 'Emirates Stadium', basePrice: 90 },
+  { id: 'g-6', teamA: 'Manchester City', teamB: 'Chelsea', date: '2025-07-19', status: 'Tickets Available', venue: 'Etihad Stadium', basePrice: 72 },
+  { id: 'g-7', teamA: 'Manchester United', teamB: 'Liverpool', date: '2025-07-26', status: 'Tickets Available', venue: 'Old Trafford', basePrice: 88 },
+  { id: 'g-8', teamA: 'Chelsea', teamB: 'Tottenham', date: '2025-08-02', status: 'No Tickets Yet', venue: 'Stamford Bridge', basePrice: 78 },
 ];
-
-export const tickets: Ticket[] = [];
 
 export const users: User[] = [
-    { id: 'admin', name: 'Admin User', email: 'admin@seatswap.com', type: 'admin', password: 'admin' },
+    { id: 'admin', name: 'Admin User', email: 'admin@seatswap.com', type: 'admin', password: 'admin', purchasedTickets: [] },
+    { id: 'u-1', name: 'Alice Johnson', email: 'alice@example.com', type: 'seller', password: 'password123', purchasedTickets: ['t-1', 't-2'] },
+    { id: 'u-2', name: 'Bob Williams', email: 'bob@example.com', type: 'seller', password: 'password123', purchasedTickets: ['t-3'] },
+    { id: 'u-3', name: 'Charlie Brown', email: 'charlie@example.com', type: 'buyer', password: 'password123', purchasedTickets: ['t-4'] }
 ];
+
+export const tickets: Ticket[] = [
+    { id: 't-1', gameId: 'g-1', section: 'A', row: 5, seat: 12, price: 105, status: 'sold', sellerId: 'u-1', purchaseDate: '2024-05-10T10:00:00Z' },
+    { id: 't-2', gameId: 'g-3', section: 'C', row: 10, seat: 5, price: 85, status: 'listed', sellerId: 'u-1' },
+    { id: 't-3', gameId: 'g-4', section: 'B', row: 2, seat: 18, price: 90, status: 'pending', sellerId: 'u-2' },
+    { id: 't-4', gameId: 'g-6', section: 'D', row: 8, seat: 22, price: 86.4, status: 'sold', sellerId: 'u-3', purchaseDate: '2024-05-12T14:30:00Z' },
+    { id: 't-5', gameId: 'g-7', section: 'A', row: 1, seat: 1, price: 132, status: 'sold', sellerId: 'u-1', purchaseDate: '2024-05-11T11:20:00Z' },
+];
+
 
 export const seatData = {
   sections: [
@@ -53,5 +63,5 @@ export const seatData = {
     { name: 'C', rows: 20, seatsPerRow: 30, priceMultiplier: 1.0 },
     { name: 'D', rows: 15, seatsPerRow: 25, priceMultiplier: 1.2 },
   ],
-  unavailableSeats: [],
+  unavailableSeats: ['A-5-12', 'D-8-22', 'A-1-1'],
 };

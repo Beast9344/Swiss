@@ -33,7 +33,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useData, ActionType } from "@/context/DataContext";
-import { generateId } from "@/lib/utils";
+import { generateId, exportToCsv } from "@/lib/utils";
 
 export default function AdminGamesPage() {
   const { state, dispatch } = useData();
@@ -83,6 +83,10 @@ export default function AdminGamesPage() {
     toast({ title: "Game Removed", description: "The game has been removed from the schedule.", variant: "destructive"});
   }
 
+  const handleExport = () => {
+    exportToCsv('games.csv', games);
+  };
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex-shrink-0 p-8 pt-6 pb-4">
@@ -92,7 +96,7 @@ export default function AdminGamesPage() {
             <p className="text-muted-foreground">Add, edit, or remove games.</p>
           </div>
           <div className="flex gap-2">
-              <Button>
+              <Button onClick={handleExport}>
                   <Download className="mr-2 h-4 w-4" />
                   Export CSV
               </Button>

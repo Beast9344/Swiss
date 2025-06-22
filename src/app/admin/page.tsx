@@ -2,8 +2,10 @@
 
 import { useData } from "@/context/DataContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DollarSign, Ticket, Clock, CheckCircle, BarChart3 } from "lucide-react";
+import { DollarSign, Ticket, Clock, CheckCircle } from "lucide-react";
 import RecentSales from "@/components/RecentSales";
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
+import { format } from 'date-fns';
 
 export default function AdminDashboard() {
   const { state } = useData();
@@ -11,8 +13,22 @@ export default function AdminDashboard() {
 
   const totalListed = tickets.length;
   const pendingApprovals = tickets.filter(t => t.status === 'pending').length;
-  const totalRevenue = tickets.filter(t => t.status === 'sold').reduce((acc, t) => acc + t.price, 0);
-  const totalSalesCount = tickets.filter(t => t.status === 'sold').length;
+  const soldTickets = tickets.filter(t => t.status === 'sold');
+  const totalRevenue = soldTickets.reduce((acc, t) => acc + t.price, 0);
+  const totalSalesCount = soldTickets.length;
+
+  const salesData = soldTickets.reduce((acc, ticket) => {
+    if (ticket.purchaseDate) {
+      const date = format(new Date(ticket.purchaseDate), 'MMM d');
+      const existing = acc.find(item => item.name === date);
+      if (existing) {
+        existing.total += ticket.price;
+      } else {
+        acc.push({ name: date, total: ticket.price });
+      }
+    }
+    return acc;
+  }, [] as { name: string; total: number }[]).sort((a,b) => new Date(a.name) > new Date(b.name) ? 1 : -1);
 
   return (
     <div className="flex h-full flex-col">
@@ -78,10 +94,35 @@ export default function AdminDashboard() {
               <CardTitle className="font-headline">Sales Overview</CardTitle>
             </CardHeader>
             <CardContent className="pl-2">
-              <div className="h-[350px] flex items-center justify-center text-muted-foreground">
-                  <BarChart3 className="h-16 w-16" />
-                  <p className="ml-4">Chart placeholder</p>
-              </div>
+              {salesData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={350}>
+                  <BarChart data={salesData}>
+                    <XAxis
+                      dataKey="name"
+                      stroke="hsl(var(--muted-foreground))"
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <YAxis
+                      stroke="hsl(var(--muted-foreground))"
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                      tickFormatter={(value) => `£${value}`}
+                    />
+                    <Tooltip
+                      cursor={{ fill: 'hsl(var(--muted))' }}
+                      contentStyle={{ backgroundColor: 'hsl(var(--background))', border: '1px solid hsl(var(--border))' }}
+                    />
+                    <Bar dataKey="total" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-[350px] flex items-center justify-center text-muted-foreground">
+                    <p>No sales data to display.</p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, Download } from "lucide-react";
 import { Card, CardContent } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+import { cn, exportToCsv } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 
 export default function AdminTicketsPage() {
@@ -62,6 +62,27 @@ export default function AdminTicketsPage() {
 
   const getGameInfo = (gameId: string) => games.find(g => g.id === gameId);
   const getUserInfo = (userId: string) => users.find(u => u.id === userId);
+  
+  const handleExport = () => {
+    const exportableData = tickets.map(ticket => {
+        const game = getGameInfo(ticket.gameId);
+        const user = getUserInfo(ticket.sellerId);
+        return {
+            'Ticket ID': ticket.id,
+            'Game': game ? `${game.teamA} vs ${game.teamB}` : 'N/A',
+            'Game Date': game ? new Date(game.date).toLocaleDateString() : 'N/A',
+            'Seller Name': user?.name ?? 'N/A',
+            'Seller Email': user?.email ?? 'N/A',
+            'Section': ticket.section,
+            'Row': ticket.row,
+            'Seat': ticket.seat,
+            'Price': ticket.price.toFixed(2),
+            'Status': ticket.status,
+            'Purchase Date': ticket.purchaseDate ? new Date(ticket.purchaseDate).toLocaleString() : 'N/A',
+        };
+    });
+    exportToCsv('tickets.csv', exportableData);
+  };
 
   return (
     <div className="flex h-full flex-col">
@@ -71,7 +92,7 @@ export default function AdminTicketsPage() {
             <h2 className="text-3xl font-bold tracking-tight font-headline">Ticket Management</h2>
             <p className="text-muted-foreground">Approve, reject, or remove ticket listings.</p>
           </div>
-          <Button>
+          <Button onClick={handleExport}>
               <Download className="mr-2 h-4 w-4" />
               Export CSV
           </Button>
