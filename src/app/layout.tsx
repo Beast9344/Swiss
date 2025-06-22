@@ -32,19 +32,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("h-full", inter.variable, montserrat.variable)}>
+    <html lang="en" className={cn(inter.variable, montserrat.variable)}>
       <head />
       <body
         className={cn(
-          'relative h-full font-body antialiased',
-          'flex flex-col'
+          'font-body antialiased'
         )}
         suppressHydrationWarning={true}
       >
         <DataProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
           <Toaster />
         </DataProvider>
       </body>
