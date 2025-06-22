@@ -1,34 +1,17 @@
 "use client";
 
+import { useData } from "@/context/DataContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, Ticket, Clock, CheckCircle, BarChart3 } from "lucide-react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { useData } from "@/context/DataContext";
+import RecentSales from "@/components/RecentSales";
 
 export default function AdminDashboard() {
-  const { tickets, users, games } = useData();
+  const { tickets } = useData();
 
   const totalListed = tickets.length;
   const pendingApprovals = tickets.filter(t => t.status === 'pending').length;
-  // Show last 5 sold tickets
-  const recentSales = tickets.filter(t => t.status === 'sold').slice(-5).reverse();
   const totalRevenue = tickets.filter(t => t.status === 'sold').reduce((acc, t) => acc + t.price, 0);
   const totalSalesCount = tickets.filter(t => t.status === 'sold').length;
-
-  const getGameInfo = (gameId: string) => {
-    return games.find(g => g.id === gameId);
-  }
-
-  const getUserInfo = (userId: string) => {
-    return users.find(u => u.id === userId);
-  }
 
   return (
     <div className="flex h-full flex-col">
@@ -51,7 +34,7 @@ export default function AdminDashboard() {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Listed Tickets</CardTitle>
+              <CardTitle className="text-sm font-medium">Total Tickets</CardTitle>
               <Ticket className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -86,30 +69,7 @@ export default function AdminDashboard() {
               <CardTitle className="font-headline">Recent Sales</CardTitle>
             </CardHeader>
             <CardContent>
-              <Table>
-                  <TableHeader>
-                      <TableRow>
-                          <TableHead>Game</TableHead>
-                          <TableHead>Seat</TableHead>
-                          <TableHead>Buyer</TableHead>
-                          <TableHead className="text-right">Price</TableHead>
-                      </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                      {recentSales.map(ticket => {
-                          const game = getGameInfo(ticket.gameId);
-                          const user = getUserInfo(ticket.sellerId); // In our new flow, this ID belongs to the buyer
-                          return (
-                              <TableRow key={ticket.id}>
-                                  <TableCell>{game ? `${game.teamA} vs ${game.teamB}`: 'N/A'}</TableCell>
-                                  <TableCell>{ticket.section}{ticket.row}-{ticket.seat}</TableCell>
-                                  <TableCell>{user?.name ?? 'N/A'}</TableCell>
-                                  <TableCell className="text-right">£{ticket.price.toFixed(2)}</TableCell>
-                              </TableRow>
-                          )
-                      })}
-                  </TableBody>
-              </Table>
+              <RecentSales />
             </CardContent>
           </Card>
           <Card className="col-span-3">

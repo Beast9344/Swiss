@@ -10,7 +10,10 @@ import {
 } from '@/lib/data';
 import type { Game, Ticket, User } from '@/lib/data';
 
-type SeatData = typeof initialSeatData;
+type SeatData = {
+    sections: { name: string; rows: number; seatsPerRow: number; priceMultiplier: number }[];
+    unavailableSeats: string[];
+};
 
 // Action Types
 const ActionType = {

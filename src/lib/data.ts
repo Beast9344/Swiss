@@ -26,6 +26,7 @@ export type User = {
     email: string;
     type: 'seller' | 'buyer' | 'admin';
     password?: string;
+    purchasedTickets?: string[];
 };
 
 export const games: Game[] = [

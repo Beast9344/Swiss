@@ -42,6 +42,7 @@ export default function AdminUsersPage() {
                       <TableHead>Password</TableHead>
                       <TableHead>User Type</TableHead>
                       <TableHead>User ID</TableHead>
+ <TableHead>Tickets Bought</TableHead>
                   </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -56,6 +57,7 @@ export default function AdminUsersPage() {
                           </Badge>
                       </TableCell>
                       <TableCell>{user.id}</TableCell>
+ <TableCell>{user.purchasedTickets?.length ?? 0}</TableCell>
                       </TableRow>
                   ))}
                   </TableBody>
