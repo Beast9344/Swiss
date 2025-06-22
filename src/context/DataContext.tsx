@@ -11,6 +11,9 @@ import type { Game, Ticket, User } from '@/lib/data';
 
 type SeatData = typeof initialSeatData;
 
+// A more robust ID generator to prevent key collision issues in React.
+const generateId = (prefix: string) => `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+
 type DataContextType = {
   games: Game[];
   tickets: Ticket[];
@@ -37,14 +40,12 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   const addTicket = (ticket: Omit<Ticket, 'id'>) => {
-    // Using a more robust unique ID to prevent conflicts and ensure updates propagate.
-    const newTicket = { ...ticket, id: `t${Date.now()}` };
+    const newTicket = { ...ticket, id: generateId('t') };
     setTickets(prevTickets => [...prevTickets, newTicket]);
   };
 
   const addUser = (user: Omit<User, 'id'>) => {
-    // Using a more robust unique ID to prevent conflicts and ensure the new user is returned correctly.
-    const newUser = { ...user, id: `u${Date.now()}` };
+    const newUser = { ...user, id: generateId('u') };
     setUsers(prevUsers => [...prevUsers, newUser]);
     return newUser;
   };

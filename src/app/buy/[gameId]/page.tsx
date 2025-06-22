@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, use, useRef } from "react";
+import { useState, useRef } from "react";
 import { notFound } from "next/navigation"
 import Image from "next/image"
 import { CalendarDays, MapPin, Ticket, CreditCard, User as UserIcon, CheckCircle, Download } from "lucide-react"
@@ -18,10 +18,9 @@ import html2canvas from "html2canvas";
 import { useData } from "@/context/DataContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export default function GamePage({ params }: { params: any }) {
-  const resolvedParams = use(params);
+export default function GamePage({ params }: { params: { gameId: string } }) {
   const { games, seatData, addTicket, addUser, updateSeatData } = useData();
-  const game = games.find(g => g.id === resolvedParams.gameId)
+  const game = games.find(g => g.id === params.gameId)
   const { toast } = useToast();
   
   const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
