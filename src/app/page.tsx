@@ -29,7 +29,7 @@ export default function Home() {
     <>
       <section className="relative w-full py-20 md:py-32 lg:py-40 flex items-center justify-center">
         <Image
-          src="https://placehold.co/1920x1080.png"
+          src="/images/hero.jpg"
           alt="Stadium background"
           fill
           className="object-cover -z-10 brightness-50"
