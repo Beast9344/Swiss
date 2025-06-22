@@ -16,6 +16,7 @@ import QRCode from "react-qr-code";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { useData } from "@/context/DataContext";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function GamePage({ params }: { params: any }) {
   const resolvedParams = use(params);
@@ -31,11 +32,22 @@ export default function GamePage({ params }: { params: any }) {
   const [purchaseComplete, setPurchaseComplete] = useState(false);
   const [receiptData, setReceiptData] = useState<any>(null);
   const receiptRef = useRef<HTMLDivElement>(null);
+  const [selectedSectionName, setSelectedSectionName] = useState<string>(seatData.sections[0]?.name || '');
 
 
   if (!game) {
     notFound()
   }
+
+  const handleSectionChange = (sectionName: string) => {
+    setSelectedSectionName(sectionName);
+    setSelectedSeat(null);
+  };
+
+  const filteredSeatData = {
+    ...seatData,
+    sections: selectedSectionName ? seatData.sections.filter(s => s.name === selectedSectionName) : [],
+  };
 
   const handlePurchase = () => {
     if (!selectedSeat) {
@@ -154,11 +166,26 @@ export default function GamePage({ params }: { params: any }) {
             <Card>
               <CardHeader>
                 <CardTitle className="font-headline text-2xl">Select Your Seats</CardTitle>
-                <CardDescription>Click on an available seat to add it to your cart. Unavailable seats are greyed out.</CardDescription>
+                <CardDescription>First choose a section, then click on an available seat to add it to your cart. Unavailable seats are greyed out.</CardDescription>
               </CardHeader>
               <CardContent>
+                <div className="max-w-xs mx-auto mb-8">
+                  <Label htmlFor="section-select" className="mb-2 block font-medium">Choose a Section</Label>
+                  <Select onValueChange={handleSectionChange} defaultValue={selectedSectionName}>
+                    <SelectTrigger id="section-select">
+                      <SelectValue placeholder="Select a section" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {seatData.sections.map(section => (
+                        <SelectItem key={section.name} value={section.name}>
+                          Section {section.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
                 <SeatMap 
-                  seatData={seatData} 
+                  seatData={filteredSeatData} 
                   basePrice={game.basePrice}
                   selectedSeat={selectedSeat}
                   onSeatSelect={setSelectedSeat}
