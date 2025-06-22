@@ -10,8 +10,7 @@ import { Label } from "@/components/ui/label";
 import { useData } from '@/context/DataContext';
 
 export default function Home() {
-  const { state } = useData();
-  const { games } = state;
+  const { games } = useData();
   const [selectedClub, setSelectedClub] = useState<string | null>(null);
 
   const allClubs = Array.from(new Set(games.flatMap(game => [game.teamA, game.teamB]))).sort();

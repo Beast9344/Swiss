@@ -4,8 +4,7 @@ import { GameCard } from '@/components/game-card';
 import { useData } from '@/context/DataContext';
 
 export default function BuyPage() {
-  const { state } = useData();
-  const { games } = state;
+  const { games } = useData();
   const futureGames = games.filter(game => new Date(game.date) > new Date());
 
   return (

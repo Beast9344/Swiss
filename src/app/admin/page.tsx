@@ -8,8 +8,7 @@ import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recha
 import { format } from 'date-fns';
 
 export default function AdminDashboard() {
-  const { state } = useData();
-  const { tickets } = state;
+  const { tickets } = useData();
 
   const totalListed = tickets.length;
   const pendingApprovals = tickets.filter(t => t.status === 'pending').length;

@@ -16,8 +16,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { exportToCsv } from "@/lib/utils";
 
 export default function AdminUsersPage() {
-  const { state } = useData();
-  const { users } = state;
+  const { users } = useData();
 
   const handleExport = () => {
     // Exclude password from the export for security

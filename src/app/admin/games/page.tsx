@@ -32,12 +32,11 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { useData, ActionType } from "@/context/DataContext";
+import { useData } from "@/context/DataContext";
 import { generateId, exportToCsv } from "@/lib/utils";
 
 export default function AdminGamesPage() {
-  const { state, dispatch } = useData();
-  const { games } = state;
+  const { games, setGames, removeGame: removeGameFromContext } = useData();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingGame, setEditingGame] = useState<Game | null>(null);
   const { toast } = useToast();
@@ -56,11 +55,11 @@ export default function AdminGamesPage() {
 
     if (editingGame) {
       const updatedGames = games.map(g => g.id === editingGame.id ? { ...editingGame, ...gameData } : g);
-      dispatch({ type: ActionType.SET_GAMES, payload: updatedGames });
+      setGames(updatedGames);
       toast({ title: "Game Updated", description: "The game details have been successfully updated." });
     } else {
       const newGame: Game = { ...gameData, id: generateId('g') };
-      dispatch({ type: ActionType.SET_GAMES, payload: [...games, newGame] });
+      setGames(prevGames => [...prevGames, newGame]);
       toast({ title: "Game Added", description: "The new game has been added to the schedule." });
     }
     
@@ -79,7 +78,7 @@ export default function AdminGamesPage() {
   };
 
   const removeGame = (gameId: string) => {
-    dispatch({ type: ActionType.REMOVE_GAME, payload: gameId });
+    removeGameFromContext(gameId);
     toast({ title: "Game Removed", description: "The game has been removed from the schedule.", variant: "destructive"});
   }
 

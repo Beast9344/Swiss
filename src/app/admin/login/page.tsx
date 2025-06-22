@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useData, ActionType } from '@/context/DataContext';
+import { useData } from '@/context/DataContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -13,8 +13,7 @@ import { Logo } from '@/components/logo';
 
 export default function AdminLoginPage() {
     const router = useRouter();
-    const { state, dispatch } = useData();
-    const { users } = state;
+    const { users, setCurrentUser } = useData();
     const [error, setError] = useState('');
 
     const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
@@ -27,7 +26,7 @@ export default function AdminLoginPage() {
         const user = users.find(u => u.email === email && u.password === password);
 
         if (user && user.type === 'admin') {
-            dispatch({ type: ActionType.SET_CURRENT_USER, payload: user });
+            setCurrentUser(user);
             router.push('/admin');
         } else {
             setError('Invalid credentials or not an admin account.');

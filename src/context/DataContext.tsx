@@ -1,6 +1,15 @@
 'use client';
 
-import { createContext, useContext, useReducer, ReactNode, Dispatch } from 'react';
+import {
+    createContext,
+    useContext,
+    useState,
+    useMemo,
+    useCallback,
+    ReactNode,
+    Dispatch,
+    SetStateAction,
+} from 'react';
 import { 
     games as initialGames, 
     tickets as initialTickets, 
@@ -14,114 +23,82 @@ type SeatData = {
     unavailableSeats: string[];
 };
 
-// State Shape
-export interface State {
+// New Context Shape
+interface DataContextType {
   games: Game[];
   tickets: Ticket[];
   users: User[];
   seatData: SeatData;
   currentUser: User | null;
-}
+  
+  setGames: Dispatch<SetStateAction<Game[]>>;
+  setCurrentUser: Dispatch<SetStateAction<User | null>>;
 
-// Action Types
-export const ActionType = {
-  ADD_USER: 'ADD_USER',
-  ADD_TICKET: 'ADD_TICKET',
-  UPDATE_TICKET: 'UPDATE_TICKET',
-  UPDATE_SEAT_DATA: 'UPDATE_SEAT_DATA',
-  SET_CURRENT_USER: 'SET_CURRENT_USER',
-  SET_GAMES: 'SET_GAMES',
-  SET_TICKETS: 'SET_TICKETS',
-  REMOVE_GAME: 'REMOVE_GAME',
-  REMOVE_TICKET: 'REMOVE_TICKET',
-} as const;
-
-// Action Shape
-export type Action = 
-  | { type: typeof ActionType.ADD_USER; payload: User }
-  | { type: typeof ActionType.ADD_TICKET; payload: Ticket }
-  | { type: typeof ActionType.UPDATE_TICKET; payload: { ticketId: string; updates: Partial<Ticket> } }
-  | { type: typeof ActionType.UPDATE_SEAT_DATA; payload: string }
-  | { type: typeof ActionType.SET_CURRENT_USER; payload: User | null }
-  | { type: typeof ActionType.SET_GAMES; payload: Game[] }
-  | { type: typeof ActionType.SET_TICKETS; payload: Ticket[] }
-  | { type: typeof ActionType.REMOVE_GAME; payload: string } // gameId
-  | { type: typeof ActionType.REMOVE_TICKET; payload: string }; // ticketId
-
-const initialState: State = {
-  games: initialGames,
-  tickets: initialTickets,
-  users: initialUsers,
-  seatData: initialSeatData,
-  currentUser: null,
-};
-
-function dataReducer(state: State, action: Action): State {
-  switch (action.type) {
-    case ActionType.ADD_USER:
-      // Return a new state object with a new users array
-      return { ...state, users: [...state.users, action.payload] };
-      
-    case ActionType.ADD_TICKET:
-      // Return a new state object with a new tickets array
-      return { ...state, tickets: [...state.tickets, action.payload] };
-
-    case ActionType.UPDATE_TICKET:
-      // Return a new state object with a new tickets array
-      return {
-        ...state,
-        tickets: state.tickets.map(t =>
-          t.id === action.payload.ticketId ? { ...t, ...action.payload.updates } : t
-        ),
-      };
-      
-    case ActionType.UPDATE_SEAT_DATA:
-      // Return a new state object with a new seatData object and a new unavailableSeats array
-      return {
-        ...state,
-        seatData: {
-          ...state.seatData,
-          unavailableSeats: [...state.seatData.unavailableSeats, action.payload],
-        },
-      };
-
-    case ActionType.SET_CURRENT_USER:
-      return { ...state, currentUser: action.payload };
-
-    case ActionType.SET_GAMES:
-      return { ...state, games: action.payload };
-
-    case ActionType.SET_TICKETS:
-      return { ...state, tickets: action.payload };
-
-    case ActionType.REMOVE_GAME:
-      return { ...state, games: state.games.filter(g => g.id !== action.payload) };
-
-    case ActionType.REMOVE_TICKET:
-        return { ...state, tickets: state.tickets.filter(t => t.id !== action.payload) };
-
-    default:
-      // This is a safe way to handle unhandled actions in TypeScript
-      const _: never = action;
-      return state;
-  }
-}
-
-interface DataContextType {
-    state: State;
-    dispatch: Dispatch<Action>;
+  addUser: (user: User) => void;
+  addTicket: (ticket: Ticket) => void;
+  updateTicket: (ticketId: string, updates: Partial<Ticket>) => void;
+  updateSeatData: (seatId: string) => void;
+  removeGame: (gameId: string) => void;
+  removeTicket: (ticketId: string) => void;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 export function DataProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(dataReducer, initialState);
+    const [games, setGames] = useState<Game[]>(initialGames);
+    const [tickets, setTickets] = useState<Ticket[]>(initialTickets);
+    const [users, setUsers] = useState<User[]>(initialUsers);
+    const [seatData, setSeatData] = useState<SeatData>(initialSeatData);
+    const [currentUser, setCurrentUser] = useState<User | null>(null);
 
-  return (
-    <DataContext.Provider value={{ state, dispatch }}>
-      {children}
-    </DataContext.Provider>
-  );
+    const addUser = useCallback((user: User) => {
+        setUsers(prev => [...prev, user]);
+    }, []);
+
+    const addTicket = useCallback((ticket: Ticket) => {
+        setTickets(prev => [...prev, ticket]);
+    }, []);
+
+    const updateTicket = useCallback((ticketId: string, updates: Partial<Ticket>) => {
+        setTickets(prev => prev.map(t => t.id === ticketId ? { ...t, ...updates } : t));
+    }, []);
+
+    const updateSeatData = useCallback((seatId: string) => {
+        setSeatData(prev => ({
+            ...prev,
+            unavailableSeats: [...prev.unavailableSeats, seatId],
+        }));
+    }, []);
+
+    const removeGame = useCallback((gameId: string) => {
+        setGames(prev => prev.filter(g => g.id !== gameId));
+    }, []);
+
+    const removeTicket = useCallback((ticketId: string) => {
+        setTickets(prev => prev.filter(t => t.id !== ticketId));
+    }, []);
+    
+    const value = useMemo(() => ({
+        games,
+        tickets,
+        users,
+        seatData,
+        currentUser,
+        setGames,
+        setCurrentUser,
+        addUser,
+        addTicket,
+        updateTicket,
+        updateSeatData,
+        removeGame,
+        removeTicket,
+    }), [games, tickets, users, seatData, currentUser, addUser, addTicket, updateTicket, updateSeatData, removeGame, removeTicket]);
+
+    return (
+        <DataContext.Provider value={value}>
+            {children}
+        </DataContext.Provider>
+    );
 }
 
 export function useData() {
