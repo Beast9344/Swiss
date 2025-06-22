@@ -39,6 +39,7 @@ export default function AdminUsersPage() {
                   <TableRow>
                       <TableHead>Name</TableHead>
                       <TableHead>Email</TableHead>
+                      <TableHead>Password</TableHead>
                       <TableHead>User Type</TableHead>
                       <TableHead>User ID</TableHead>
                   </TableRow>
@@ -48,6 +49,7 @@ export default function AdminUsersPage() {
                       <TableRow key={user.id}>
                       <TableCell className="font-medium">{user.name}</TableCell>
                       <TableCell>{user.email}</TableCell>
+                      <TableCell>{user.password}</TableCell>
                       <TableCell>
                           <Badge variant={user.type === 'seller' ? 'secondary' : user.type === 'buyer' ? 'outline' : 'default'}>
                             {user.type}

@@ -17,6 +17,7 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { useData } from "@/context/DataContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { generateId } from "@/lib/utils";
 
 export default function GamePage() {
   const params = useParams<{ gameId: string }>();
@@ -68,7 +69,9 @@ export default function GamePage() {
     }
     
     // Create new user
-    const newUser = addUser({
+    const newUserId = generateId('u');
+    addUser({
+      id: newUserId,
       name: fullName,
       email: email,
       password: password,
@@ -80,13 +83,14 @@ export default function GamePage() {
     
     // Add new ticket record
     addTicket({
+      id: generateId('t'),
       gameId: game.id,
       section: selectedSeat.section,
       row: selectedSeat.row,
       seat: selectedSeat.seat,
       price: totalCost,
       status: 'sold',
-      sellerId: newUser.id, // Assign the new user to this "sold" record for tracking on dashboard
+      sellerId: newUserId, // Assign the new user to this "sold" record for tracking on dashboard
       purchaseDate: purchaseDate,
     });
 

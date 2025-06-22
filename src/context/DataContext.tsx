@@ -12,8 +12,6 @@ import type { Game, Ticket, User } from '@/lib/data';
 
 type SeatData = typeof initialSeatData;
 
-const generateId = (prefix: string) => `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
-
 // Action Types
 const ActionType = {
   ADD_USER: 'ADD_USER',
@@ -91,8 +89,8 @@ function dataReducer(state: State, action: Action): State {
 
 interface DataContextType extends State {
   setCurrentUser: (user: User | null) => void;
-  addUser: (user: Omit<User, 'id'>) => User;
-  addTicket: (ticket: Omit<Ticket, 'id'>) => void;
+  addUser: (user: User) => void;
+  addTicket: (ticket: Ticket) => void;
   updateSeatData: (newUnavailableSeat: string) => void;
   updateTicket: (ticketId: string, updates: Partial<Ticket>) => void;
   setGames: React.Dispatch<React.SetStateAction<Game[]>>;
@@ -105,15 +103,12 @@ const DataContext = createContext<DataContextType | undefined>(undefined);
 export function DataProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(dataReducer, initialState);
 
-  const addUser = useCallback((user: Omit<User, 'id'>): User => {
-    const newUser = { ...user, id: generateId('u') };
-    dispatch({ type: ActionType.ADD_USER, payload: newUser });
-    return newUser;
+  const addUser = useCallback((user: User) => {
+    dispatch({ type: ActionType.ADD_USER, payload: user });
   }, []);
 
-  const addTicket = useCallback((ticket: Omit<Ticket, 'id'>) => {
-    const newTicket = { ...ticket, id: generateId('t') };
-    dispatch({ type: ActionType.ADD_TICKET, payload: newTicket });
+  const addTicket = useCallback((ticket: Ticket) => {
+    dispatch({ type: ActionType.ADD_TICKET, payload: ticket });
   }, []);
 
   const updateTicket = useCallback((ticketId: string, updates: Partial<Ticket>) => {
