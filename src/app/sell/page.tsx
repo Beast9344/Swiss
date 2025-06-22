@@ -112,7 +112,7 @@ export default function SellPage() {
               <CardHeader>
                 <CardTitle className="font-headline">Seller Login</CardTitle>
                 <CardDescription>
-                  Log in to view your purchased tickets and list them for resale. (e.g. john.doe@example.com / password123)
+                  Log in to view your purchased tickets and list them for resale.
                 </CardDescription>
               </CardHeader>
               <form id="login-form" onSubmit={handleLogin}>
