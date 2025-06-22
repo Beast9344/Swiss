@@ -7,13 +7,15 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { AlertCircle, Ticket as TicketIcon, LogOut, CheckCircle, ArrowLeft } from 'lucide-react';
+import { AlertCircle, Ticket as TicketIcon, LogOut, CheckCircle, ArrowLeft, Banknote } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { cn } from '@/lib/utils';
 import { useData } from '@/context/DataContext';
 import type { Ticket } from '@/lib/data';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Separator } from '@/components/ui/separator';
 
 
 export default function SellPage() {
@@ -21,6 +23,8 @@ export default function SellPage() {
   const [error, setError] = useState('');
   const { toast } = useToast();
   const [showLogin, setShowLogin] = useState(false);
+  const [sellStep, setSellStep] = useState<'select' | 'confirm' | 'success'>('select');
+  const [selectedTicketIds, setSelectedTicketIds] = useState<string[]>([]);
 
   const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -41,14 +45,42 @@ export default function SellPage() {
   const handleLogout = () => {
     setCurrentUser(null);
   };
-
-  const handleResellTicket = (ticketId: string) => {
-    updateTicket(ticketId, { status: 'pending' });
-    toast({
-      title: "Ticket Listed for Resale",
-      description: "Your ticket has been submitted for approval and will be listed shortly.",
-    });
+  
+  const handleSelectTicket = (ticketId: string, isChecked: boolean) => {
+    setSelectedTicketIds(prev =>
+      isChecked ? [...prev, ticketId] : prev.filter(id => id !== ticketId)
+    );
   };
+
+  const handleProceedToConfirm = () => {
+    if (selectedTicketIds.length === 0) {
+      toast({
+        title: "No Tickets Selected",
+        description: "Please select at least one ticket to list for resale.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setSellStep('confirm');
+  };
+
+  const handleConfirmListing = (event: React.FormEvent) => {
+    event.preventDefault();
+    selectedTicketIds.forEach(ticketId => {
+        updateTicket(ticketId, { status: 'pending' });
+    });
+    toast({
+      title: "Tickets Listed for Resale",
+      description: "Your tickets have been submitted for approval and will be listed shortly.",
+    });
+    setSellStep('success');
+  };
+
+  const handleSellMore = () => {
+    setSelectedTicketIds([]);
+    setSellStep('select');
+  };
+
 
   if (!currentUser) {
     if (!showLogin) {
@@ -87,7 +119,7 @@ export default function SellPage() {
               <div className="relative">
                 <div className="absolute -left-12 top-0 flex-shrink-0 bg-card h-8 w-8 rounded-full border-2 border-primary flex items-center justify-center font-bold text-primary z-10">3</div>
                 <h3 className="font-bold text-lg mb-1">Confirm your release</h3>
-                <p className="text-muted-foreground">Review your selections. By confirming, your ticket will be listed on the platform – but you still retain ownership until someone claims or buys it.</p>
+                <p className="text-muted-foreground">Review your selections and provide payout info. By confirming, your ticket will be listed on the platform – but you still retain ownership until someone claims or buys it.</p>
               </div>
 
               <div className="relative">
@@ -99,7 +131,7 @@ export default function SellPage() {
               <div className="relative">
                  <div className="absolute -left-12 top-0 flex-shrink-0 bg-card h-8 w-8 rounded-full border-2 border-primary flex items-center justify-center font-bold text-primary z-10">5</div>
                 <h3 className="font-bold text-lg mb-1">Receive your payout</h3>
-                <p className="text-muted-foreground">Once the game is played, your share of the revenue will be credited to your account or preferred payment method.</p>
+                <p className="text-muted-foreground">Once the game is played, your share of the revenue (85% of the resale price) will be credited to your account.</p>
               </div>
             </div>
           </div>
@@ -149,21 +181,11 @@ export default function SellPage() {
     }
   }
 
-  const userTickets = tickets.filter(ticket => ticket.sellerId === currentUser?.id);
+  const userOwnedTickets = tickets.filter(ticket => ticket.sellerId === currentUser?.id && ticket.status === 'sold');
+  const ticketsToSell = tickets.filter(ticket => selectedTicketIds.includes(ticket.id));
 
-  const getBadgeVariant = (status: Ticket['status']) => {
-      switch (status) {
-          case 'listed': return 'default';
-          case 'pending': return 'secondary';
-          case 'sold': return 'default'; // 'sold' now means owned by user
-          case 'rejected': return 'destructive';
-          default: return 'outline';
-      }
-  };
-  
   const getStatusText = (status: Ticket['status']) => {
       if (status === 'sold') return 'Owned';
-      // Capitalize first letter
       return status.charAt(0).toUpperCase() + status.slice(1);
   }
 
@@ -172,7 +194,7 @@ export default function SellPage() {
         <div className="flex justify-between items-center">
             <div>
                 <h1 className="text-4xl md:text-5xl font-headline font-bold text-primary">Welcome, {currentUser.name}</h1>
-                <p className="text-muted-foreground mt-2">Here are your tickets. You can list any owned ticket for resale.</p>
+                <p className="text-muted-foreground mt-2">Manage your tickets for resale.</p>
             </div>
             <Button variant="outline" onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
@@ -180,62 +202,151 @@ export default function SellPage() {
             </Button>
         </div>
 
-      <Card>
-          <CardHeader>
-              <CardTitle className="font-headline text-2xl flex items-center gap-2"><TicketIcon /> My Tickets</CardTitle>
-              <CardDescription>Track the status of your tickets and list them for sale.</CardDescription>
-          </CardHeader>
-          <CardContent>
-              <Table>
-                  <TableHeader>
-                      <TableRow>
-                          <TableHead>Game</TableHead>
-                          <TableHead>Seat</TableHead>
-                          <TableHead>Status</TableHead>
-                          <TableHead className="text-right">Actions</TableHead>
-                      </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                      {userTickets.length > 0 ? (
-                          userTickets.map(ticket => {
-                              const game = games.find(g => g.id === ticket.gameId);
-                              return (
-                                  <TableRow key={ticket.id}>
-                                      <TableCell>
-                                          <div className="font-medium">{game ? `${game.teamA} vs ${game.teamB}` : 'N/A'}</div>
-                                          <div className="text-sm text-muted-foreground">{game ? new Date(game.date).toLocaleDateString() : ''}</div>
-                                      </TableCell>
-                                      <TableCell>{`Sec ${ticket.section}, Row ${ticket.row}, Seat ${ticket.seat}`}</TableCell>
-                                      <TableCell>
-                                          <Badge variant={getBadgeVariant(ticket.status)} className={cn({'bg-accent text-accent-foreground': ticket.status === 'sold'})}>
-                                              {getStatusText(ticket.status)}
-                                          </Badge>
-                                      </TableCell>
-                                      <TableCell className="text-right">
-                                        {ticket.status === 'sold' ? (
-                                            <Button size="sm" onClick={() => handleResellTicket(ticket.id)}>
-                                                <CheckCircle className="mr-2 h-4 w-4" /> Sell Ticket
-                                            </Button>
-                                        ) : (
-                                            <Button size="sm" variant="outline" disabled>
-                                                {getStatusText(ticket.status)}
-                                            </Button>
-                                        )}
-                                      </TableCell>
-                                  </TableRow>
-                              );
-                          })
-                      ) : (
-                          <TableRow>
-                              <TableCell colSpan={4} className="h-24 text-center">
-                                  You have not purchased any tickets yet.
-                              </TableCell>
-                          </TableRow>
-                      )}
-                  </TableBody>
-              </Table>
-          </CardContent>
-      </Card>
+        {sellStep === 'select' && (
+            <Card>
+                <CardHeader>
+                    <CardTitle className="font-headline text-2xl flex items-center gap-2"><TicketIcon /> My Owned Tickets</CardTitle>
+                    <CardDescription>Select the tickets you wish to put up for resale.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="w-[50px]">Sell</TableHead>
+                                <TableHead>Game</TableHead>
+                                <TableHead>Seat</TableHead>
+                                <TableHead>Status</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {userOwnedTickets.length > 0 ? (
+                                userOwnedTickets.map(ticket => {
+                                    const game = games.find(g => g.id === ticket.gameId);
+                                    return (
+                                        <TableRow key={ticket.id}>
+                                            <TableCell>
+                                                <Checkbox
+                                                    id={`select-${ticket.id}`}
+                                                    checked={selectedTicketIds.includes(ticket.id)}
+                                                    onCheckedChange={(checked) => handleSelectTicket(ticket.id, !!checked)}
+                                                    aria-label={`Select ticket for ${game?.teamA} vs ${game?.teamB}`}
+                                                />
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className="font-medium">{game ? `${game.teamA} vs ${game.teamB}` : 'N/A'}</div>
+                                                <div className="text-sm text-muted-foreground">{game ? new Date(game.date).toLocaleDateString() : ''}</div>
+                                            </TableCell>
+                                            <TableCell>{`Sec ${ticket.section}, Row ${ticket.row}, Seat ${ticket.seat}`}</TableCell>
+                                            <TableCell>
+                                                <Badge className='bg-accent text-accent-foreground'>
+                                                    {getStatusText(ticket.status)}
+                                                </Badge>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={4} className="h-24 text-center">
+                                        You do not own any tickets available for resale.
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </CardContent>
+                <CardFooter>
+                    <Button onClick={handleProceedToConfirm} disabled={selectedTicketIds.length === 0} className="ml-auto">
+                        Sell {selectedTicketIds.length} {selectedTicketIds.length === 1 ? 'Ticket' : 'Tickets'} <ArrowLeft className="mr-2 h-4 w-4 -scale-x-100" />
+                    </Button>
+                </CardFooter>
+            </Card>
+        )}
+
+        {sellStep === 'confirm' && (
+             <form onSubmit={handleConfirmListing}>
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="font-headline text-2xl">Confirm Your Listing</CardTitle>
+                        <CardDescription>Review your tickets and provide bank information for your payout. You will receive 85% of the reselling price.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-8">
+                        <div>
+                            <h3 className="text-lg font-semibold mb-2">Selected Tickets</h3>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Game</TableHead>
+                                        <TableHead>Seat</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {ticketsToSell.map(ticket => {
+                                        const game = games.find(g => g.id === ticket.gameId);
+                                        return (
+                                            <TableRow key={ticket.id}>
+                                                <TableCell className="font-medium">{game ? `${game.teamA} vs ${game.teamB}` : 'N/A'}</TableCell>
+                                                <TableCell>{`Sec ${ticket.section}, Row ${ticket.row}, Seat ${ticket.seat}`}</TableCell>
+                                            </TableRow>
+                                        )
+                                    })}
+                                </TableBody>
+                            </Table>
+                        </div>
+                        <Separator />
+                        <div>
+                            <h3 className="font-headline text-lg mb-4 flex items-center gap-2"><Banknote /> Bank Information for Payout</h3>
+                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="accountName">Account Holder Name</Label>
+                                    <Input id="accountName" placeholder="John M. Doe" required />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="sortCode">Sort Code</Label>
+                                    <Input id="sortCode" placeholder="12-34-56" required />
+                                </div>
+                                <div className="space-y-2 col-span-1 md:col-span-2">
+                                    <Label htmlFor="accountNumber">Account Number</Label>
+                                    <Input id="accountNumber" placeholder="12345678" required />
+                                </div>
+                            </div>
+                        </div>
+                    </CardContent>
+                    <CardFooter className="justify-end gap-2">
+                         <Button variant="outline" onClick={() => setSellStep('select')}>
+                            <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                        </Button>
+                        <Button type="submit">
+                           <CheckCircle className="mr-2 h-4 w-4" /> Confirm & List Tickets
+                        </Button>
+                    </CardFooter>
+                </Card>
+             </form>
+        )}
+
+        {sellStep === 'success' && (
+            <Card className="text-center">
+                <CardHeader>
+                    <div className="mx-auto bg-accent/20 text-accent rounded-full h-16 w-16 flex items-center justify-center">
+                      <CheckCircle className="h-10 w-10" />
+                    </div>
+                    <CardTitle className="font-headline text-2xl mt-4">Listing Successful!</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-muted-foreground">Your tickets have been submitted for administrative approval and will appear on the marketplace shortly.
+                    <br/>
+                    You will be informed by email as soon as your tickets are sold.
+                    </p>
+                </CardContent>
+                <CardFooter>
+                    <Button onClick={handleSellMore} className="mx-auto">
+                        Sell More Tickets
+                    </Button>
+                </CardFooter>
+            </Card>
+        )}
     </div>
   );
 }
+
+    
