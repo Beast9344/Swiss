@@ -17,6 +17,7 @@ export type Ticket = {
   price: number;
   status: 'listed' | 'pending' | 'sold' | 'rejected';
   sellerId: string;
+  purchaseDate?: string;
 };
 
 export type User = {
@@ -41,7 +42,7 @@ export const games: Game[] = [
 export const tickets: Ticket[] = [
   { id: 't1', gameId: '1', section: 'A', row: 5, seat: 12, price: 85, status: 'listed', sellerId: 'u1' },
   { id: 't2', gameId: '3', section: 'B', row: 3, seat: 8, price: 95, status: 'pending', sellerId: 'u2' },
-  { id: 't3', gameId: '4', section: 'C', row: 10, seat: 1, price: 105, status: 'sold', sellerId: 'u1' },
+  { id: 't3', gameId: '4', section: 'C', row: 10, seat: 1, price: 105, status: 'sold', sellerId: 'u1', purchaseDate: '2024-05-20T10:00:00Z' },
   { id: 't4', gameId: '1', section: 'D', row: 1, seat: 20, price: 75, status: 'listed', sellerId: 'u3' },
   { id: 't5', gameId: '3', section: 'A', row: 2, seat: 5, price: 115, status: 'rejected', sellerId: 'u2' },
 ];

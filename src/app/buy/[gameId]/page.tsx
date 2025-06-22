@@ -64,6 +64,7 @@ export default function GamePage({ params }: { params: any }) {
     });
 
     const totalCost = parseFloat((selectedSeat.price * 1.1).toFixed(2));
+    const purchaseDate = new Date().toISOString();
     
     // Add new ticket record
     addTicket({
@@ -74,6 +75,7 @@ export default function GamePage({ params }: { params: any }) {
       price: totalCost,
       status: 'sold',
       sellerId: newUser.id, // Assign the new user to this "sold" record for tracking on dashboard
+      purchaseDate: purchaseDate,
     });
 
     // Update seat map to make this seat unavailable for others
@@ -84,7 +86,7 @@ export default function GamePage({ params }: { params: any }) {
       game,
       seat: selectedSeat,
       user: { fullName, email },
-      purchaseDate: new Date().toISOString(),
+      purchaseDate: purchaseDate,
       total: totalCost.toFixed(2),
     };
 

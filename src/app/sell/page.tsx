@@ -7,21 +7,18 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { CheckCircle, AlertCircle, Ticket as TicketIcon, ArrowRight } from 'lucide-react';
-import Image from 'next/image';
+import { AlertCircle, Ticket as TicketIcon, LogOut, CheckCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { cn } from '@/lib/utils';
 import { useData } from '@/context/DataContext';
-import type { Game, User, Ticket } from '@/lib/data';
+import type { Ticket } from '@/lib/data';
 
 
 export default function SellPage() {
-  const { games, users, tickets, addTicket, currentUser, setCurrentUser } = useData();
+  const { games, users, tickets, currentUser, setCurrentUser, updateTicket } = useData();
   const [error, setError] = useState('');
-  const [selectedGames, setSelectedGames] = useState<Game[]>([]);
-  const [showSummary, setShowSummary] = useState(false);
   const { toast } = useToast();
 
   const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
@@ -42,113 +39,24 @@ export default function SellPage() {
 
   const handleLogout = () => {
     setCurrentUser(null);
-    setSelectedGames([]);
-    setShowSummary(false);
   };
 
-  const handleGameSelect = (game: Game, checked: boolean) => {
-    setSelectedGames(prev =>
-      checked ? [...prev, game] : prev.filter(g => g.id !== game.id)
-    );
-  };
-
-  const handleListTickets = () => {
-    if (selectedGames.length === 0) {
-      toast({
-        title: "No Games Selected",
-        description: "Please select at least one game to list tickets for.",
-        variant: "destructive",
-      });
-      return;
-    }
-    setShowSummary(true);
-  };
-  
-  const handleConfirmSale = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!currentUser) return;
-
-    selectedGames.forEach(game => {
-      const newTicket: Omit<Ticket, 'id'> = {
-        gameId: game.id,
-        sellerId: currentUser.id,
-        section: 'ST', // Mock: Season Ticket holder's section
-        row: 1,
-        seat: 1,
-        price: game.basePrice, // Using base price for mock sale
-        status: 'pending' // New listings require admin approval
-      };
-      addTicket(newTicket);
-    });
-
+  const handleResellTicket = (ticketId: string) => {
+    updateTicket(ticketId, { status: 'pending' });
     toast({
-        title: "Your tickets have been submitted for approval!",
-        description: "You can track their status on your dashboard. They will be listed after admin review.",
+      title: "Ticket Listed for Resale",
+      description: "Your ticket has been submitted for approval and will be listed shortly.",
     });
-
-    setSelectedGames([]);
-    setShowSummary(false);
-  }
+  };
 
   if (!currentUser) {
     return (
-      <div className="container mx-auto px-4 md:px-6 py-12 md:py-20">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-headline font-bold text-primary tracking-tight">Sell your Ticket here!</h1>
-          <p className="max-w-3xl mx-auto text-lg text-muted-foreground mt-4">
-            Do you have a seasonal sports ticket and you cannot attend a specific game?
-            <br />
-            Sell your ticket for the date you cannot attend <span className="text-primary font-medium">below</span>.
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-12 items-start">
-          <div>
-            <h2 className="text-3xl font-headline font-bold mb-6">How it works:</h2>
-            <ol className="space-y-8">
-              <li className="flex gap-4">
-                <div className="flex-shrink-0 h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg">1</div>
-                <div>
-                  <h3 className="font-bold text-lg">Log in with your account</h3>
-                  <p className="text-muted-foreground mt-1">Access your season ticket by securely logging in. Any user with an account can list a ticket for sale.</p>
-                </div>
-              </li>
-              <li className="flex gap-4">
-                 <div className="flex-shrink-0 h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg">2</div>
-                <div>
-                  <h3 className="font-bold text-lg">Select the game(s) you cannot attend</h3>
-                  <p className="text-muted-foreground mt-1">View upcoming games and simply check the ones for which you'd like to sell your ticket.</p>
-                </div>
-              </li>
-              <li className="flex gap-4">
-                 <div className="flex-shrink-0 h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg">3</div>
-                <div>
-                  <h3 className="font-bold text-lg">Confirm your listing</h3>
-                  <p className="text-muted-foreground mt-1">Review your selections and enter your payout information. Your ticket will be listed on the platform immediately.</p>
-                </div>
-              </li>
-               <li className="flex gap-4">
-                 <div className="flex-shrink-0 h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg">4</div>
-                <div>
-                  <h3 className="font-bold text-lg">Track your sale</h3>
-                  <p className="text-muted-foreground mt-1">Monitor the status of your listing in your seller dashboard and get notified when it's sold.</p>
-                </div>
-              </li>
-              <li className="flex gap-4">
-                 <div className="flex-shrink-0 h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg">5</div>
-                <div>
-                  <h3 className="font-bold text-lg">Receive your payout</h3>
-                  <p className="text-muted-foreground mt-1">Once the game is played, your share of the revenue will be credited to your account.</p>
-                </div>
-              </li>
-            </ol>
-          </div>
-          <div>
-            <Card>
+        <div className="container mx-auto px-4 md:px-6 py-12 md:py-20 flex justify-center items-start">
+            <Card className="w-full max-w-md">
               <CardHeader>
-                <CardTitle className="font-headline">Login to Sell Tickets</CardTitle>
+                <CardTitle className="font-headline">Seller Login</CardTitle>
                 <CardDescription>
-                  Use your account credentials to log in and list your ticket. Any user with an account can list a ticket for sale. (e.g. john.doe@example.com / password123)
+                  Log in to view your purchased tickets and list them for resale. (e.g. john.doe@example.com / password123)
                 </CardDescription>
               </CardHeader>
               <form id="login-form" onSubmit={handleLogin}>
@@ -171,130 +79,50 @@ export default function SellPage() {
                 </CardContent>
                 <CardFooter>
                   <Button type="submit" form="login-form" className="w-full">
-                    Login & Select Tickets
+                    Login
                   </Button>
                 </CardFooter>
               </form>
             </Card>
-          </div>
         </div>
-      </div>
     );
-  }
-
-  if (showSummary) {
-     return (
-        <div className="container mx-auto px-4 md:px-6 py-12 md:py-20">
-             <Card className="w-full max-w-2xl mx-auto">
-                 <CardHeader>
-                     <CardTitle className="font-headline text-2xl">Confirmation Summary</CardTitle>
-                     <CardDescription>Review your selections and provide your bank information for payouts.</CardDescription>
-                 </CardHeader>
-                 <CardContent>
-                     <h3 className="font-medium mb-2">Selected Games:</h3>
-                     <ul className="space-y-2 border rounded-md p-4 mb-6">
-                         {selectedGames.map(game => (
-                             <li key={game.id} className="flex justify-between items-center text-sm">
-                                 <span>{game.teamA} vs {game.teamB}</span>
-                                 <span className="text-muted-foreground">{new Date(game.date).toLocaleDateString()}</span>
-                             </li>
-                         ))}
-                     </ul>
-                     <form onSubmit={handleConfirmSale} className="space-y-4" id="bank-info-form">
-                        <h3 className="font-medium mb-2">Payout Information</h3>
-                        <div className="space-y-2">
-                            <Label htmlFor="bank-name">Bank Name</Label>
-                            <Input id="bank-name" required />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="account-number">Account Number</Label>
-                            <Input id="account-number" required />
-                        </div>
-                         <div className="space-y-2">
-                            <Label htmlFor="sort-code">Sort Code</Label>
-                            <Input id="sort-code" required />
-                        </div>
-                     </form>
-                 </CardContent>
-                 <CardFooter className="flex justify-between">
-                     <Button variant="outline" onClick={() => setShowSummary(false)}>Back</Button>
-                     <Button type="submit" form="bank-info-form" className="bg-accent hover:bg-accent/90">
-                        <CheckCircle className="mr-2 h-4 w-4" /> Confirm and List
-                     </Button>
-                 </CardFooter>
-             </Card>
-        </div>
-     )
   }
 
   const userTickets = tickets.filter(ticket => ticket.sellerId === currentUser?.id);
 
-  const getBadgeVariant = (status: typeof tickets[0]['status']) => {
+  const getBadgeVariant = (status: Ticket['status']) => {
       switch (status) {
           case 'listed': return 'default';
           case 'pending': return 'secondary';
-          case 'sold': return 'default';
+          case 'sold': return 'default'; // 'sold' now means owned by user
           case 'rejected': return 'destructive';
           default: return 'outline';
       }
   };
+  
+  const getStatusText = (status: Ticket['status']) => {
+      if (status === 'sold') return 'Owned';
+      // Capitalize first letter
+      return status.charAt(0).toUpperCase() + status.slice(1);
+  }
 
   return (
-    <div className="container mx-auto px-4 md:px-6 py-12 md:py-20 space-y-12">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl md:text-5xl font-headline font-bold text-primary mb-4">Choose the games you cannot attend</h1>
-        <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
-          <li>Select all games you cannot attend.</li>
-          <li>Confirm your choices.</li>
-          <li>Add your payment info to receive your payout.</li>
-        </ol>
-      </div>
-
-      <div className="space-y-4 max-w-4xl mx-auto">
-        {games.map(game => {
-          const isSelected = selectedGames.some(g => g.id === game.id);
-          return (
-            <div key={game.id} className="flex items-center justify-between p-4 border border-border rounded-lg bg-card/50 transition-all hover:border-primary/50">
-              <div className="flex items-center gap-6">
-                <Image 
-                  src={`https://placehold.co/100x100.png`} 
-                  data-ai-hint="soccer badge" 
-                  alt="Team Badge" 
-                  width={80} 
-                  height={80} 
-                  className="rounded-full" 
-                />
-                <div className="space-y-1">
-                  <p className="font-bold text-xl">{new Date(game.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
-                  <p className="font-medium text-lg">{game.teamA} vs {game.teamB}</p>
-                  <p className="text-sm text-muted-foreground">{game.venue}</p>
-                </div>
-              </div>
-              <Button
-                variant={isSelected ? 'default' : 'outline'}
-                className="w-48"
-                onClick={() => handleGameSelect(game, !isSelected)}
-              >
-                <span>I want to sell</span>
-                <CheckCircle className="ml-2 h-5 w-5" />
-              </Button>
+    <div className="container mx-auto px-4 md:px-6 py-12 md:py-20 space-y-8">
+        <div className="flex justify-between items-center">
+            <div>
+                <h1 className="text-4xl md:text-5xl font-headline font-bold text-primary">Welcome, {currentUser.name}</h1>
+                <p className="text-muted-foreground mt-2">Here are your tickets. You can list any owned ticket for resale.</p>
             </div>
-          );
-        })}
-      </div>
-      
-      <div className="flex justify-between items-center max-w-4xl mx-auto">
-          <Button variant="outline" onClick={handleLogout}>Logout</Button>
-          <Button onClick={handleListTickets} disabled={selectedGames.length === 0} size="lg">
-              Confirm choices and proceed
-              <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-      </div>
+            <Button variant="outline" onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
+            </Button>
+        </div>
 
-      <Card className="w-full max-w-4xl mx-auto">
+      <Card>
           <CardHeader>
-              <CardTitle className="font-headline text-2xl flex items-center gap-2"><TicketIcon /> Your Listed Tickets</CardTitle>
-              <CardDescription>Track the status and see payout details for your resale tickets.</CardDescription>
+              <CardTitle className="font-headline text-2xl flex items-center gap-2"><TicketIcon /> My Tickets</CardTitle>
+              <CardDescription>Track the status of your tickets and list them for sale.</CardDescription>
           </CardHeader>
           <CardContent>
               <Table>
@@ -303,15 +131,13 @@ export default function SellPage() {
                           <TableHead>Game</TableHead>
                           <TableHead>Seat</TableHead>
                           <TableHead>Status</TableHead>
-                          <TableHead className="text-right">Your Payout</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
                   </TableHeader>
                   <TableBody>
                       {userTickets.length > 0 ? (
                           userTickets.map(ticket => {
                               const game = games.find(g => g.id === ticket.gameId);
-                              // Assuming an 85% payout for the seller
-                              const payout = ticket.price * 0.85; 
                               return (
                                   <TableRow key={ticket.id}>
                                       <TableCell>
@@ -321,11 +147,19 @@ export default function SellPage() {
                                       <TableCell>{`Sec ${ticket.section}, Row ${ticket.row}, Seat ${ticket.seat}`}</TableCell>
                                       <TableCell>
                                           <Badge variant={getBadgeVariant(ticket.status)} className={cn({'bg-accent text-accent-foreground': ticket.status === 'sold'})}>
-                                              {ticket.status}
+                                              {getStatusText(ticket.status)}
                                           </Badge>
                                       </TableCell>
-                                      <TableCell className="text-right font-medium">
-                                          {ticket.status === 'sold' ? `£${payout.toFixed(2)}` : 'Pending'}
+                                      <TableCell className="text-right">
+                                        {ticket.status === 'sold' ? (
+                                            <Button size="sm" onClick={() => handleResellTicket(ticket.id)}>
+                                                <CheckCircle className="mr-2 h-4 w-4" /> Sell Ticket
+                                            </Button>
+                                        ) : (
+                                            <Button size="sm" variant="outline" disabled>
+                                                {getStatusText(ticket.status)}
+                                            </Button>
+                                        )}
                                       </TableCell>
                                   </TableRow>
                               );
@@ -333,7 +167,7 @@ export default function SellPage() {
                       ) : (
                           <TableRow>
                               <TableCell colSpan={4} className="h-24 text-center">
-                                  You haven't listed any tickets for resale yet.
+                                  You have not purchased any tickets yet.
                               </TableCell>
                           </TableRow>
                       )}

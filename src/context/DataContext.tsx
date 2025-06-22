@@ -24,6 +24,7 @@ type DataContextType = {
   addTicket: (ticket: Omit<Ticket, 'id'>) => void;
   addUser: (user: Omit<User, 'id'>) => User;
   updateSeatData: (newUnavailableSeat: string) => void;
+  updateTicket: (ticketId: string, updates: Partial<Ticket>) => void;
 };
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -52,8 +53,16 @@ export function DataProvider({ children }: { children: ReactNode }) {
     }));
   };
 
+  const updateTicket = (ticketId: string, updates: Partial<Ticket>) => {
+    setTickets(prevTickets =>
+      prevTickets.map(ticket =>
+        ticket.id === ticketId ? { ...ticket, ...updates } : ticket
+      )
+    );
+  };
+
   return (
-    <DataContext.Provider value={{ games, tickets, users, seatData, currentUser, setCurrentUser, setGames, setTickets, setUsers, addTicket, addUser, updateSeatData }}>
+    <DataContext.Provider value={{ games, tickets, users, seatData, currentUser, setCurrentUser, setGames, setTickets, setUsers, addTicket, addUser, updateSeatData, updateTicket }}>
       {children}
     </DataContext.Provider>
   );
