@@ -23,7 +23,7 @@ export default {
       },
       fontFamily: {
         body: ['var(--font-inter)', 'sans-serif'],
-        headline: ['var(--font-inter)', 'sans-serif'],
+        headline: ['var(--font-montserrat)', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {

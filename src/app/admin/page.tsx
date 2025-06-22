@@ -33,7 +33,7 @@ export default function AdminDashboard() {
     <div className="flex h-full flex-col">
       <div className="flex-shrink-0 p-8 pt-6 pb-4">
         <div className="flex items-center justify-between space-y-2">
-          <h2 className="text-3xl font-bold tracking-tight font-headline">Dashboard</h2>
+          <h2 className="text-3xl font-bold tracking-tight font-headline uppercase">Dashboard</h2>
         </div>
       </div>
       <div className="flex-1 space-y-4 overflow-y-auto px-8 pb-8">
@@ -82,7 +82,7 @@ export default function AdminDashboard() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
           <Card className="col-span-4">
             <CardHeader>
-              <CardTitle className="font-headline">Recent Sales</CardTitle>
+              <CardTitle className="font-headline uppercase">Recent Sales</CardTitle>
             </CardHeader>
             <CardContent>
               <RecentSales />
@@ -90,7 +90,7 @@ export default function AdminDashboard() {
           </Card>
           <Card className="col-span-3">
             <CardHeader>
-              <CardTitle className="font-headline">Sales Overview</CardTitle>
+              <CardTitle className="font-headline uppercase">Sales Overview</CardTitle>
             </CardHeader>
             <CardContent className="pl-2">
               {salesData.length > 0 ? (

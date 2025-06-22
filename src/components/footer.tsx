@@ -33,7 +33,7 @@ export function Footer() {
             </p>
           </div>
           <div className="col-span-1">
-            <h4 className="font-headline font-semibold mb-4">Quick Links</h4>
+            <h4 className="font-headline font-semibold mb-4 uppercase">Quick Links</h4>
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.href}>
@@ -45,7 +45,7 @@ export function Footer() {
             </ul>
           </div>
           <div className="col-span-1">
-            <h4 className="font-headline font-semibold mb-4">Contact Us</h4>
+            <h4 className="font-headline font-semibold mb-4 uppercase">Contact Us</h4>
             <ul className="space-y-3 text-sm text-muted-foreground">
                 <li className="flex items-center gap-3">
                     <Mail className="h-5 w-5 text-primary"/>
@@ -62,7 +62,7 @@ export function Footer() {
             </ul>
           </div>
            <div className="col-span-1">
-             <h4 className="font-headline font-semibold mb-4">Follow Us</h4>
+             <h4 className="font-headline font-semibold mb-4 uppercase">Follow Us</h4>
              <div className="flex items-center space-x-2">
                 <a href="#" className="text-muted-foreground hover:text-primary p-2 bg-secondary rounded-full transition-colors"><Twitter className="h-5 w-5" /></a>
                 <a href="#" className="text-muted-foreground hover:text-primary p-2 bg-secondary rounded-full transition-colors"><Github className="h-5 w-5" /></a>

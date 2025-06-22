@@ -85,7 +85,7 @@ export default function AdminTicketsPage() {
       <div className="flex-shrink-0 p-8 pt-6 pb-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight font-headline">Ticket Management</h2>
+            <h2 className="text-3xl font-bold tracking-tight font-headline uppercase">Ticket Management</h2>
             <p className="text-muted-foreground">Approve, reject, or remove ticket listings.</p>
           </div>
           <Button onClick={handleExport}>

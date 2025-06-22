@@ -28,7 +28,7 @@ export default function Home() {
       <main className="flex-1">
         <section className="relative w-full py-20 md:py-32 lg:py-40 bg-card/50">
           <div className="container mx-auto px-4 md:px-6 text-center">
-            <h1 className="text-4xl md:text-6xl font-headline font-bold text-primary tracking-tighter mb-4">
+            <h1 className="text-4xl md:text-6xl font-headline font-bold text-primary tracking-tighter mb-4 uppercase">
               SeatSwap: Get Your Seat and Game on!
             </h1>
             <div className="max-w-3xl mx-auto text-lg md:text-xl text-muted-foreground mb-8 space-y-2">
@@ -53,7 +53,7 @@ export default function Home() {
 
         <section className="py-16 md:py-24 bg-background">
           <div className="container mx-auto px-4 md:px-6">
-            <h2 className="text-5xl md:text-7xl font-headline font-bold text-center mb-8 text-muted-foreground/30 tracking-widest">
+            <h2 className="text-5xl md:text-7xl font-headline font-bold text-center mb-8 text-muted-foreground/30 tracking-widest uppercase">
               GAMES ON THE HORIZON
             </h2>
 

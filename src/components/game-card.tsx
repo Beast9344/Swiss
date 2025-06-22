@@ -25,7 +25,7 @@ export function GameCard({ game }: GameCardProps) {
             data-ai-hint="soccer badge"
           />
         </div>
-        <h3 className="font-headline text-xl mb-2 flex-grow">{game.teamA} vs {game.teamB}</h3>
+        <h3 className="font-headline text-xl mb-2 flex-grow uppercase">{game.teamA} vs {game.teamB}</h3>
         <div className="text-sm text-muted-foreground flex items-center gap-2 mb-2">
           <CalendarDays className="h-4 w-4" />
           <span>{new Date(game.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>

@@ -91,7 +91,7 @@ export default function AdminGamesPage() {
       <div className="flex-shrink-0 p-8 pt-6 pb-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight font-headline">Game Schedule</h2>
+            <h2 className="text-3xl font-bold tracking-tight font-headline uppercase">Game Schedule</h2>
             <p className="text-muted-foreground">Add, edit, or remove games.</p>
           </div>
           <div className="flex gap-2">

@@ -9,7 +9,7 @@ export default function ContactPage() {
   return (
     <div className="container mx-auto px-4 md:px-6 py-12 md:py-20">
       <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-headline font-bold text-primary">Get in Touch</h1>
+        <h1 className="text-4xl md:text-5xl font-headline font-bold text-primary uppercase">Get in Touch</h1>
         <p className="max-w-2xl mx-auto text-lg text-muted-foreground mt-4">
           Have questions? We're here to help. Reach out to us via the form below or through our contact details.
         </p>
@@ -19,7 +19,7 @@ export default function ContactPage() {
         <div className="space-y-8">
             <Card>
                 <CardHeader>
-                    <CardTitle className="font-headline">Contact Information</CardTitle>
+                    <CardTitle className="font-headline uppercase">Contact Information</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4 text-muted-foreground">
                     <div className="flex items-center gap-4">
@@ -40,7 +40,7 @@ export default function ContactPage() {
         <div>
           <Card>
             <CardHeader>
-              <CardTitle className="font-headline">Send us a Message</CardTitle>
+              <CardTitle className="font-headline uppercase">Send us a Message</CardTitle>
               <CardDescription>Fill out the form and we'll get back to you as soon as possible.</CardDescription>
             </CardHeader>
             <CardContent>

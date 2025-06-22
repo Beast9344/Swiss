@@ -40,7 +40,7 @@ export default function AdminLoginPage() {
             </div>
             <Card className="w-full max-w-sm">
                 <CardHeader>
-                    <CardTitle className="font-headline">Admin Login</CardTitle>
+                    <CardTitle className="font-headline uppercase">Admin Login</CardTitle>
                     <CardDescription>
                         Enter your admin credentials to access the dashboard.
                     </CardDescription>

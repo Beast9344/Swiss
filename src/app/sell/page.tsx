@@ -87,7 +87,7 @@ export default function SellPage() {
       return (
         <div className="container mx-auto px-4 md:px-6 py-12 md:py-20">
           <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-headline font-bold text-primary">Sell your Ticket here!</h1>
+            <h1 className="text-4xl md:text-5xl font-headline font-bold text-primary uppercase">Sell your Ticket here!</h1>
             <p className="max-w-3xl mx-auto text-lg text-muted-foreground mt-4">
               Do you have a seasonal ticket and you cannot attend a specific game?
               <br />
@@ -97,7 +97,7 @@ export default function SellPage() {
 
           <div className="max-w-4xl mx-auto">
             <div className="flex justify-between items-start mb-12">
-              <h2 className="text-3xl font-headline font-bold">How it works:</h2>
+              <h2 className="text-3xl font-headline font-bold uppercase">How it works:</h2>
               <Button onClick={() => setShowLogin(true)}>Login through club</Button>
             </div>
             
@@ -142,7 +142,7 @@ export default function SellPage() {
         <div className="container mx-auto px-4 md:px-6 py-12 md:py-20 flex justify-center items-start">
             <Card className="w-full max-w-md">
               <CardHeader>
-                <CardTitle className="font-headline">Seller Login</CardTitle>
+                <CardTitle className="font-headline uppercase">Seller Login</CardTitle>
                 <CardDescription>
                   Log in to view your purchased tickets and list them for resale.
                 </CardDescription>
@@ -193,7 +193,7 @@ export default function SellPage() {
     <div className="container mx-auto px-4 md:px-6 py-12 md:py-20 space-y-8">
         <div className="flex justify-between items-center">
             <div>
-                <h1 className="text-4xl md:text-5xl font-headline font-bold text-primary">Welcome, {currentUser.name}</h1>
+                <h1 className="text-4xl md:text-5xl font-headline font-bold text-primary uppercase">Welcome, {currentUser.name}</h1>
                 <p className="text-muted-foreground mt-2">Manage your tickets for resale.</p>
             </div>
             <Button variant="outline" onClick={handleLogout}>
@@ -205,7 +205,7 @@ export default function SellPage() {
         {sellStep === 'select' && (
             <Card>
                 <CardHeader>
-                    <CardTitle className="font-headline text-2xl flex items-center gap-2"><TicketIcon /> My Owned Tickets</CardTitle>
+                    <CardTitle className="font-headline text-2xl flex items-center gap-2 uppercase"><TicketIcon /> My Owned Tickets</CardTitle>
                     <CardDescription>Select the tickets you wish to put up for resale.</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -267,7 +267,7 @@ export default function SellPage() {
              <form onSubmit={handleConfirmListing}>
                 <Card>
                     <CardHeader>
-                        <CardTitle className="font-headline text-2xl">Confirm Your Listing</CardTitle>
+                        <CardTitle className="font-headline text-2xl uppercase">Confirm Your Listing</CardTitle>
                         <CardDescription>Review your tickets and provide bank information for your payout. You will receive 85% of the reselling price.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-8">
@@ -295,7 +295,7 @@ export default function SellPage() {
                         </div>
                         <Separator />
                         <div>
-                            <h3 className="font-headline text-lg mb-4 flex items-center gap-2"><Banknote /> Bank Information for Payout</h3>
+                            <h3 className="font-headline text-lg mb-4 flex items-center gap-2 uppercase"><Banknote /> Bank Information for Payout</h3>
                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="accountName">Account Holder Name</Label>
@@ -330,7 +330,7 @@ export default function SellPage() {
                     <div className="mx-auto bg-accent/20 text-accent rounded-full h-16 w-16 flex items-center justify-center">
                       <CheckCircle className="h-10 w-10" />
                     </div>
-                    <CardTitle className="font-headline text-2xl mt-4">Listing Successful!</CardTitle>
+                    <CardTitle className="font-headline text-2xl mt-4 uppercase">Listing Successful!</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <p className="text-muted-foreground">Your tickets have been submitted for administrative approval and will appear on the marketplace shortly.

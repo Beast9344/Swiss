@@ -4,13 +4,20 @@ import { cn } from '@/lib/utils';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Toaster } from "@/components/ui/toaster"
-import { Inter } from 'next/font/google';
+import { Inter, Montserrat } from 'next/font/google';
 import { DataProvider } from '@/context/DataContext';
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
   weight: ['400', '500', '700'],
+  display: 'swap',
+});
+
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  variable: '--font-montserrat',
+  weight: ['700'],
   display: 'swap',
 });
 
@@ -25,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("h-full", inter.variable)}>
+    <html lang="en" className={cn("h-full", inter.variable, montserrat.variable)}>
       <head />
       <body
         className={cn(

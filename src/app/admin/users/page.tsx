@@ -35,7 +35,7 @@ export default function AdminUsersPage() {
       <div className="flex-shrink-0 p-8 pt-6 pb-4">
         <div className="flex items-center justify-between">
           <div>
-              <h2 className="text-3xl font-bold tracking-tight font-headline">User Management</h2>
+              <h2 className="text-3xl font-bold tracking-tight font-headline uppercase">User Management</h2>
               <p className="text-muted-foreground">View all sellers and buyers on the platform.</p>
           </div>
           <Button onClick={handleExport}>

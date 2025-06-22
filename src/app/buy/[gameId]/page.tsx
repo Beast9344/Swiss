@@ -150,7 +150,7 @@ export default function GamePage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
         <div className="relative container mx-auto px-4 md:px-6 h-full flex flex-col justify-end pb-12">
-          <h1 className="text-4xl md:text-6xl font-headline font-bold text-primary">{game.teamA} vs {game.teamB}</h1>
+          <h1 className="text-4xl md:text-6xl font-headline font-bold text-primary uppercase">{game.teamA} vs {game.teamB}</h1>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-4 text-lg text-muted-foreground">
             <div className="flex items-center gap-2">
               <CalendarDays className="h-5 w-5" />
@@ -169,7 +169,7 @@ export default function GamePage() {
           <div className="lg:col-span-2">
             <Card>
               <CardHeader>
-                <CardTitle className="font-headline text-2xl">Select Your Seats</CardTitle>
+                <CardTitle className="font-headline text-2xl uppercase">Select Your Seats</CardTitle>
                 <CardDescription>First choose a section, then click on an available seat to add it to your cart. Unavailable seats are greyed out.</CardDescription>
               </CardHeader>
               <CardContent>
@@ -206,7 +206,7 @@ export default function GamePage() {
                     <div className="mx-auto bg-accent/20 text-accent rounded-full h-12 w-12 flex items-center justify-center">
                       <CheckCircle className="h-8 w-8" />
                     </div>
-                    <CardTitle className="font-headline text-2xl mt-4">Purchase Confirmed</CardTitle>
+                    <CardTitle className="font-headline text-2xl mt-4 uppercase">Purchase Confirmed</CardTitle>
                     <CardDescription>Your e-ticket and receipt.</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4 text-sm">
@@ -263,7 +263,7 @@ export default function GamePage() {
             ) : (
              <Card className="sticky top-24">
               <CardHeader>
-                <CardTitle className="font-headline text-2xl flex items-center gap-2"><Ticket /> Your Order</CardTitle>
+                <CardTitle className="font-headline text-2xl flex items-center gap-2 uppercase"><Ticket /> Your Order</CardTitle>
                 <CardDescription>Complete your purchase below.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -289,7 +289,7 @@ export default function GamePage() {
                 </div>
                 <Separator />
                  <div>
-                    <h3 className="font-headline text-lg mb-4 flex items-center gap-2"><UserIcon /> Your Information</h3>
+                    <h3 className="font-headline text-lg mb-4 flex items-center gap-2 uppercase"><UserIcon /> Your Information</h3>
                      <div className="space-y-4">
                         <div className="space-y-2">
                             <Label htmlFor="fullName">Full Name</Label>
@@ -307,7 +307,7 @@ export default function GamePage() {
                 </div>
                 <Separator />
                 <div>
-                    <h3 className="font-headline text-lg mb-4 flex items-center gap-2"><CreditCard /> Payment Information</h3>
+                    <h3 className="font-headline text-lg mb-4 flex items-center gap-2 uppercase"><CreditCard /> Payment Information</h3>
                     <Tabs value={paymentMethod} onValueChange={setPaymentMethod}>
                       <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger value="card">Credit Card</TabsTrigger>
