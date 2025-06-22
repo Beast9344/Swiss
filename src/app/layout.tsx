@@ -4,20 +4,13 @@ import { cn } from '@/lib/utils';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Toaster } from "@/components/ui/toaster"
-import { Inter, Graduate } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import { DataProvider } from '@/context/DataContext';
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
   weight: ['400', '500', '700'],
-  display: 'swap',
-});
-
-const graduate = Graduate({
-  subsets: ['latin'],
-  variable: '--font-headline',
-  weight: ['400'],
   display: 'swap',
 });
 
@@ -32,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("h-full", inter.variable, graduate.variable)}>
+    <html lang="en" className={cn("h-full", inter.variable)}>
       <head />
       <body
         className={cn(
