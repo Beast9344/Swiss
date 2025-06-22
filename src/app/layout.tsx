@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Toaster } from "@/components/ui/toaster"
-import { Inter, Russo_One } from 'next/font/google';
+import { Inter, Graduate } from 'next/font/google';
 import { DataProvider } from '@/context/DataContext';
 
 const inter = Inter({
@@ -14,7 +14,7 @@ const inter = Inter({
   display: 'swap',
 });
 
-const russo_one = Russo_One({
+const graduate = Graduate({
   subsets: ['latin'],
   variable: '--font-headline',
   weight: ['400'],
@@ -32,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("h-full", inter.variable, russo_one.variable)}>
+    <html lang="en" className={cn("h-full", inter.variable, graduate.variable)}>
       <head />
       <body
         className={cn(
