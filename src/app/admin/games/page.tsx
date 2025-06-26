@@ -87,69 +87,62 @@ export default function AdminGamesPage() {
   };
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex-shrink-0 p-8 pt-6 pb-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight font-headline uppercase">Game Schedule</h2>
-            <p className="text-muted-foreground">Add, edit, or remove games.</p>
-          </div>
-          <div className="flex gap-2">
-              <Button onClick={handleExport}>
-                  <Download className="mr-2 h-4 w-4" />
-                  Export CSV
-              </Button>
-              <Button onClick={openNewDialog}>
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  Add Game
-              </Button>
-          </div>
+    <div className="p-8 space-y-4">
+      <div className="flex items-center justify-end">
+        <div className="flex gap-2">
+            <Button onClick={handleExport}>
+                <Download className="mr-2 h-4 w-4" />
+                Export CSV
+            </Button>
+            <Button onClick={openNewDialog}>
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Add Game
+            </Button>
         </div>
       </div>
-      <div className="flex-1 space-y-4 overflow-y-auto px-8 pb-8">
-        <Card>
-          <CardContent className="mt-6">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Game</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Venue</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Actions</TableHead>
+      
+      <Card>
+        <CardContent className="mt-6">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Game</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead>Venue</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {games.map(game => (
+                <TableRow key={game.id}>
+                  <TableCell className="font-medium">{game.teamA} vs {game.teamB}</TableCell>
+                  <TableCell>{new Date(game.date).toLocaleDateString()}</TableCell>
+                  <TableCell>{game.venue}</TableCell>
+                  <TableCell>
+                    <Badge variant={game.status === 'Tickets Available' ? 'default' : 'secondary'} className={game.status === 'Tickets Available' ? 'bg-accent' : ''}>
+                      {game.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem onClick={() => openEditDialog(game)}>Edit</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => removeGame(game.id)} className="text-destructive">Remove</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {games.map(game => (
-                  <TableRow key={game.id}>
-                    <TableCell className="font-medium">{game.teamA} vs {game.teamB}</TableCell>
-                    <TableCell>{new Date(game.date).toLocaleDateString()}</TableCell>
-                    <TableCell>{game.venue}</TableCell>
-                    <TableCell>
-                      <Badge variant={game.status === 'Tickets Available' ? 'default' : 'secondary'} className={game.status === 'Tickets Available' ? 'bg-accent' : ''}>
-                        {game.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuItem onClick={() => openEditDialog(game)}>Edit</DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => removeGame(game.id)} className="text-destructive">Remove</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      </div>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
