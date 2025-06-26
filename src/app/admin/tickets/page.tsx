@@ -81,86 +81,79 @@ export default function AdminTicketsPage() {
   };
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex-shrink-0 p-8 pt-6 pb-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight font-headline uppercase">Ticket Management</h2>
-            <p className="text-muted-foreground">Approve, reject, or remove ticket listings.</p>
-          </div>
-          <Button onClick={handleExport}>
-              <Download className="mr-2 h-4 w-4" />
-              Export CSV
-          </Button>
-        </div>
+    <div className="p-8 space-y-4">
+      <div className="flex items-center justify-end">
+        <Button onClick={handleExport}>
+            <Download className="mr-2 h-4 w-4" />
+            Export CSV
+        </Button>
       </div>
-      <div className="flex-1 space-y-4 overflow-y-auto px-8 pb-8">
-        <Card>
-          <CardContent className="mt-6">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Game</TableHead>
-                  <TableHead>Seller</TableHead>
-                  <TableHead>Seat</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {tickets.map(ticket => {
-                  const game = getGameInfo(ticket.gameId);
-                  const user = getUserInfo(ticket.sellerId);
-                  return (
-                    <TableRow key={ticket.id}>
-                      <TableCell>
-                        <div className="font-medium">{game ? `${game.teamA} vs ${game.teamB}` : 'N/A'}</div>
-                        <div className="text-sm text-muted-foreground">{game ? new Date(game.date).toLocaleDateString() : ''}</div>
-                      </TableCell>
-                      <TableCell>{user?.name ?? 'N/A'}</TableCell>
-                      <TableCell>Sec {ticket.section}, Row {ticket.row}, Seat {ticket.seat}</TableCell>
-                      <TableCell>£{ticket.price.toFixed(2)}</TableCell>
-                      <TableCell>
-                        <Badge variant={getBadgeVariant(ticket.status)} className={cn({ 'bg-accent text-accent-foreground': ticket.status === 'listed' })}>
-                          {ticket.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                              <span className="sr-only">Open menu</span>
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            {ticket.status === 'pending' && (
-                              <>
-                                <DropdownMenuItem onClick={() => handleStatusChange(ticket.id, 'listed')}>
-                                  Approve
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => handleStatusChange(ticket.id, 'rejected')}>
-                                  Reject
-                                </DropdownMenuItem>
-                              </>
-                            )}
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => handleRemove(ticket.id)} className="text-destructive">
-                              Remove Listing
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      </div>
+      
+      <Card>
+        <CardContent className="mt-6">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Game</TableHead>
+                <TableHead>Seller</TableHead>
+                <TableHead>Seat</TableHead>
+                <TableHead>Price</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {tickets.map(ticket => {
+                const game = getGameInfo(ticket.gameId);
+                const user = getUserInfo(ticket.sellerId);
+                return (
+                  <TableRow key={ticket.id}>
+                    <TableCell>
+                      <div className="font-medium">{game ? `${game.teamA} vs ${game.teamB}` : 'N/A'}</div>
+                      <div className="text-sm text-muted-foreground">{game ? new Date(game.date).toLocaleDateString() : ''}</div>
+                    </TableCell>
+                    <TableCell>{user?.name ?? 'N/A'}</TableCell>
+                    <TableCell>Sec {ticket.section}, Row {ticket.row}, Seat {ticket.seat}</TableCell>
+                    <TableCell>£{ticket.price.toFixed(2)}</TableCell>
+                    <TableCell>
+                      <Badge variant={getBadgeVariant(ticket.status)} className={cn({ 'bg-accent text-accent-foreground': ticket.status === 'listed' })}>
+                        {ticket.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          {ticket.status === 'pending' && (
+                            <>
+                              <DropdownMenuItem onClick={() => handleStatusChange(ticket.id, 'listed')}>
+                                Approve
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleStatusChange(ticket.id, 'rejected')}>
+                                Reject
+                              </DropdownMenuItem>
+                            </>
+                          )}
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem onClick={() => handleRemove(ticket.id)} className="text-destructive">
+                            Remove Listing
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   );
 }
