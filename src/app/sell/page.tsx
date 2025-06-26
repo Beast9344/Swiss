@@ -225,12 +225,14 @@ export default function SellPage() {
                                     return (
                                         <TableRow key={ticket.id}>
                                             <TableCell>
-                                                <Checkbox
-                                                    id={`select-${ticket.id}`}
-                                                    checked={selectedTicketIds.includes(ticket.id)}
-                                                    onCheckedChange={(checked) => handleSelectTicket(ticket.id, !!checked)}
-                                                    aria-label={`Select ticket for ${game?.teamA} vs ${game?.teamB}`}
-                                                />
+                                              <Checkbox
+                                                id={`select-${ticket.id}`}
+                                                checked={selectedTicketIds.includes(ticket.id)}
+                                                onCheckedChange={(checked: boolean | "indeterminate") =>
+                                                handleSelectTicket(ticket.id, !!checked)
+                                                }
+                                                aria-label={`Select ticket for ${game?.teamA} vs ${game?.teamB}`}
+                                              />
                                             </TableCell>
                                             <TableCell>
                                                 <div className="font-medium">{game ? `${game.teamA} vs ${game.teamB}` : 'N/A'}</div>
