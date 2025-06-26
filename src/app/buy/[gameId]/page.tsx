@@ -1,9 +1,10 @@
+
 "use client"
 
 import { useState, useRef, use } from "react";
 import { notFound, useParams } from "next/navigation"
 import Image from "next/image"
-import { CalendarDays, MapPin, Ticket, CreditCard, User as UserIcon, CheckCircle, Download } from "lucide-react"
+import { CalendarDays, MapPin, Ticket, CreditCard, User as UserIcon, CheckCircle, Download, Clock, Shield, Star, Users } from "lucide-react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import SeatMap, { type Seat } from "@/components/seat-map"
@@ -18,6 +19,7 @@ import html2canvas from "html2canvas";
 import { useData } from "@/context/DataContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { generateId } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 export default function GamePage() {
   const params = useParams<{ gameId: string }>();
@@ -34,7 +36,6 @@ export default function GamePage() {
   const [receiptData, setReceiptData] = useState<any>(null);
   const receiptRef = useRef<HTMLDivElement>(null);
   const [selectedSectionName, setSelectedSectionName] = useState<string>(seatData.sections[0]?.name || '');
-
 
   if (!game) {
     notFound()
@@ -90,7 +91,7 @@ export default function GamePage() {
         seat: selectedSeat.seat,
         price: totalCost,
         status: 'sold',
-        sellerId: newUserId, // Assign the new user to this "sold" record for tracking on dashboard
+        sellerId: newUserId,
         purchaseDate: purchaseDate,
     });
 
@@ -118,7 +119,7 @@ export default function GamePage() {
   const handleDownloadReceipt = () => {
     const input = receiptRef.current;
     if (input) {
-      html2canvas(input, { scale: 2, backgroundColor: null }).then((canvas) => {
+      html2canvas(input, { scale: 2, backgroundColor: '#0f172a' }).then((canvas) => {
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF('p', 'mm', 'a4');
         const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -139,223 +140,383 @@ export default function GamePage() {
   };
 
   return (
-    <div className="bg-background">
-      <section className="relative h-64 md:h-80 w-full">
-        <Image
-          src="https://placehold.co/1920x1080.png"
-          alt="Stadium background"
-          fill
-          className="opacity-10 brightness-50 object-cover"
-          data-ai-hint="stadium lights"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
-        <div className="relative container mx-auto px-4 md:px-6 h-full flex flex-col justify-end pb-12">
-          <h1 className="text-4xl md:text-6xl font-headline font-bold text-primary uppercase">{game.teamA} vs {game.teamB}</h1>
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-4 text-lg text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <CalendarDays className="h-5 w-5" />
-              <span>{new Date(game.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+    <div className="min-h-screen bg-slate-900 text-foreground">
+      {/* Hero Section with Enhanced Design */}
+      <section className="relative h-96 w-full overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-purple-900 to-slate-900"></div>
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-20 left-20 w-64 h-64 bg-white/10 rounded-full blur-xl"></div>
+          <div className="absolute bottom-20 right-20 w-48 h-48 bg-blue-400/20 rounded-full blur-xl"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-400/10 rounded-full blur-2xl"></div>
+        </div>
+        
+        <div className="relative container mx-auto px-4 md:px-6 h-full flex flex-col justify-center items-center text-center text-white">
+          <div className="space-y-6">
+            <div className="flex items-center justify-center gap-4 text-sm text-blue-200 mb-4">
+              <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
+                <Star className="h-3 w-3 mr-1" />
+                Premium Match
+              </Badge>
+              <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
+                <Users className="h-3 w-3 mr-1" />
+                High Demand
+              </Badge>
             </div>
-            <div className="flex items-center gap-2">
-              <MapPin className="h-5 w-5" />
-              <span>{game.venue}</span>
+            
+            <h1 className="text-5xl md:text-7xl font-headline font-black tracking-tight">
+              <span className="bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">
+                {game.teamA}
+              </span>
+              <span className="text-white/60 mx-6">VS</span>
+              <span className="bg-gradient-to-r from-purple-100 via-blue-100 to-white bg-clip-text text-transparent">
+                {game.teamB}
+              </span>
+            </h1>
+            
+            <div className="flex flex-wrap items-center justify-center gap-8 text-lg">
+              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3">
+                <CalendarDays className="h-5 w-5 text-blue-300" />
+                <span className="font-medium">{new Date(game.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              </div>
+              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3">
+                <MapPin className="h-5 w-5 text-purple-300" />
+                <span className="font-medium">{game.venue}</span>
+              </div>
+              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3">
+                <Clock className="h-5 w-5 text-green-300" />
+                <span className="font-medium">Kickoff 3:00 PM</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="container mx-auto px-4 md:px-6 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          <div className="lg:col-span-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-headline text-2xl uppercase">Select Your Seats</CardTitle>
-                <CardDescription>First choose a section, then click on an available seat to add it to your cart. Unavailable seats are greyed out.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="max-w-xs mx-auto mb-8">
-                  <Label htmlFor="section-select" className="mb-2 block font-medium">Choose a Section</Label>
+      <section className="container mx-auto px-4 md:px-6 py-16">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-12">
+          {/* Seat Selection Section - Enhanced */}
+          <div className="xl:col-span-2">
+            <Card className="border-slate-700 shadow-2xl bg-slate-900/80 backdrop-blur-sm overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
+                <CardTitle className="font-headline text-3xl font-bold flex items-center gap-3">
+                  <div className="p-2 bg-white/20 rounded-lg">
+                    <Ticket className="h-6 w-6" />
+                  </div>
+                  Select Your Perfect Seat
+                </CardTitle>
+                <CardDescription className="text-blue-100 mt-2 text-lg">
+                  Choose your section first, then pick your ideal seat from the interactive map below
+                </CardDescription>
+              </div>
+              
+              <CardContent className="p-8">
+                {/* Section Selector with Enhanced Design */}
+                <div className="mb-10">
+                  <div className="flex items-center justify-between mb-6">
+                    <Label className="text-xl font-semibold text-slate-200">Choose Stadium Section</Label>
+                    <Badge variant="outline" className="text-slate-400 border-slate-600">
+                      {seatData.sections.length} Sections Available
+                    </Badge>
+                  </div>
+                  
                   <Select onValueChange={handleSectionChange} defaultValue={selectedSectionName}>
-                    <SelectTrigger id="section-select">
-                      <SelectValue placeholder="Select a section" />
+                    <SelectTrigger className="w-full h-14 text-lg bg-slate-800 border-2 border-slate-700 hover:border-blue-500 transition-colors text-white">
+                      <SelectValue placeholder="Select a stadium section" />
                     </SelectTrigger>
                     <SelectContent>
                       {seatData.sections.map(section => (
-                        <SelectItem key={section.name} value={section.name}>
-                          Section {section.name}
+                        <SelectItem key={section.name} value={section.name} className="text-lg py-3">
+                          <div className="flex items-center justify-between w-full">
+                            <span className="font-medium">Section {section.name}</span>
+                            <Badge variant="secondary" className="ml-2">
+                            {section.rows * section.seatsPerRow} seats
+                            </Badge>
+                          </div>
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
-                <SeatMap 
-                  seatData={filteredSeatData} 
-                  basePrice={game.basePrice}
-                  selectedSeat={selectedSeat}
-                  onSeatSelect={setSelectedSeat}
-                />
+
+                {/* Seat Map Legend */}
+                <div className="mb-8 p-6 bg-slate-800/50 rounded-xl border border-slate-700">
+                  <h4 className="font-semibold text-slate-300 mb-4 flex items-center gap-2">
+                    <Shield className="h-5 w-5" />
+                    Seat Legend
+                  </h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-green-500 rounded-md shadow-sm"></div>
+                      <span className="text-sm font-medium text-slate-400">Available</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-blue-500 rounded-md shadow-sm border-2 border-blue-700"></div>
+                      <span className="text-sm font-medium text-slate-400">Selected</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-red-400 rounded-md shadow-sm"></div>
+                      <span className="text-sm font-medium text-slate-400">Occupied</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-yellow-500 rounded-md shadow-sm"></div>
+                      <span className="text-sm font-medium text-slate-400">Premium</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Enhanced Seat Map Container */}
+                <div className="bg-gradient-to-b from-slate-900 to-slate-800 rounded-2xl p-8 shadow-inner">
+                  <div className="text-center mb-6">
+                    <div className="inline-block bg-gradient-to-r from-green-400 to-blue-500 text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg">
+                      ⚽ PITCH ⚽
+                    </div>
+                  </div>
+                  
+                  <div className="bg-slate-950/50 backdrop-blur-sm rounded-xl p-6 shadow-xl">
+                    <SeatMap 
+                      seatData={filteredSeatData} 
+                      basePrice={game.basePrice}
+                      selectedSeat={selectedSeat}
+                      onSeatSelect={setSelectedSeat}
+                    />
+                  </div>
+                  
+                  {selectedSeat && (
+                    <div className="mt-6 p-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl text-white">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-bold text-lg">Selected Seat</h4>
+                          <p className="text-blue-100">Section {selectedSeat.section}, Row {selectedSeat.row}, Seat {selectedSeat.seat}</p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-2xl font-bold">£{selectedSeat.price.toFixed(2)}</div>
+                          <div className="text-sm text-blue-200">+ taxes & fees</div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </div>
 
-          <div className="lg:col-span-1">
+          {/* Order Summary Section - Enhanced */}
+          <div className="xl:col-span-1">
             {purchaseComplete && receiptData ? (
               <div className="sticky top-24">
-                <Card ref={receiptRef} className="p-4 bg-card text-card-foreground">
-                  <CardHeader className="text-center p-2">
-                    <div className="mx-auto bg-accent/20 text-accent rounded-full h-12 w-12 flex items-center justify-center">
-                      <CheckCircle className="h-8 w-8" />
+                <Card ref={receiptRef} className="border-slate-700 shadow-2xl bg-gradient-to-br from-slate-900 to-slate-800 overflow-hidden">
+                  <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-6 text-white text-center">
+                    <div className="mx-auto bg-white/20 backdrop-blur-sm rounded-full h-16 w-16 flex items-center justify-center mb-4">
+                      <CheckCircle className="h-10 w-10" />
                     </div>
-                    <CardTitle className="font-headline text-2xl mt-4 uppercase">Purchase Confirmed</CardTitle>
-                    <CardDescription>Your e-ticket and receipt.</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4 text-sm">
-                    <Separator />
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <h4 className="font-semibold mb-1">Game</h4>
-                        <p>{receiptData.game.teamA} vs {receiptData.game.teamB}</p>
-                        <p className="text-muted-foreground">{new Date(receiptData.game.date).toLocaleDateString()}</p>
-                        <p className="text-muted-foreground">{receiptData.game.venue}</p>
+                    <CardTitle className="font-headline text-2xl font-bold">Purchase Confirmed!</CardTitle>
+                    <CardDescription className="text-green-100 mt-2">Your digital ticket is ready</CardDescription>
+                  </div>
+                  
+                  <CardContent className="p-6 space-y-6">
+                    <div className="grid grid-cols-1 gap-6">
+                      <div className="p-4 bg-slate-800/50 rounded-lg">
+                        <h4 className="font-bold text-slate-200 mb-2 flex items-center gap-2">
+                          <Ticket className="h-4 w-4" />
+                          Match Details
+                        </h4>
+                        <p className="font-semibold">{receiptData.game.teamA} vs {receiptData.game.teamB}</p>
+                        <p className="text-slate-400 text-sm">{new Date(receiptData.game.date).toLocaleDateString()}</p>
+                        <p className="text-slate-400 text-sm">{receiptData.game.venue}</p>
                       </div>
-                      <div>
-                        <h4 className="font-semibold mb-1">Seat</h4>
-                        <p>Section {receiptData.seat.section}, Row {receiptData.seat.row}</p>
-                        <p className="font-bold text-lg">Seat {receiptData.seat.seat}</p>
+                      
+                      <div className="p-4 bg-slate-800/50 rounded-lg">
+                        <h4 className="font-bold text-slate-200 mb-2 flex items-center gap-2">
+                          <MapPin className="h-4 w-4" />
+                          Your Seat
+                        </h4>
+                        <p className="text-lg font-bold">Section {receiptData.seat.section}</p>
+                        <p>Row {receiptData.seat.row}, Seat {receiptData.seat.seat}</p>
                       </div>
-                      <div>
-                        <h4 className="font-semibold mb-1">Billed To</h4>
-                        <p>{receiptData.user.fullName}</p>
-                        <p className="text-muted-foreground">{receiptData.user.email}</p>
+                      
+                      <div className="p-4 bg-slate-800/50 rounded-lg">
+                        <h4 className="font-bold text-slate-200 mb-2 flex items-center gap-2">
+                          <UserIcon className="h-4 w-4" />
+                          Ticket Holder
+                        </h4>
+                        <p className="font-semibold">{receiptData.user.fullName}</p>
+                        <p className="text-slate-400 text-sm">{receiptData.user.email}</p>
                       </div>
-                      <div>
-                        <h4 className="font-semibold mb-1">Total Paid</h4>
-                        <p className="font-bold text-lg">£{receiptData.total}</p>
+                      
+                      <div className="p-4 bg-slate-800/50 rounded-lg">
+                        <h4 className="font-bold text-slate-200 mb-2">Total Paid</h4>
+                        <p className="text-2xl font-bold text-green-400">£{receiptData.total}</p>
                       </div>
                     </div>
-                    <Separator />
-                    <div className="flex flex-col items-center justify-center space-y-2 p-4 bg-muted/50 rounded-lg">
-                        <h4 className="font-semibold text-center">Scan for Verification</h4>
-                        <div className="bg-white p-2 rounded-md shadow-md">
-                            <QRCode
-                                value={JSON.stringify({
-                                    gameId: receiptData.game.id,
-                                    seatId: `${receiptData.seat.section}-${receiptData.seat.row}-${receiptData.seat.seat}`,
-                                    owner: receiptData.user.fullName,
-                                    purchaseDate: receiptData.purchaseDate
-                                })}
-                                size={128}
-                                viewBox={`0 0 128 128`}
-                            />
-                        </div>
+                    
+                    <div className="flex flex-col items-center justify-center p-6 bg-slate-800/50 rounded-lg">
+                      <h4 className="font-bold text-slate-200 mb-3">Entry QR Code</h4>
+                      <div className="bg-white p-4 rounded-lg shadow-lg">
+                        <QRCode
+                          value={JSON.stringify({
+                            gameId: receiptData.game.id,
+                            seatId: `${receiptData.seat.section}-${receiptData.seat.row}-${receiptData.seat.seat}`,
+                            owner: receiptData.user.fullName,
+                            purchaseDate: receiptData.purchaseDate
+                          })}
+                          size={120}
+                          viewBox={`0 0 120 120`}
+                        />
+                      </div>
+                      <p className="text-xs text-slate-500 mt-2 text-center">Present this QR code at stadium entrance</p>
                     </div>
                   </CardContent>
                 </Card>
-                <div className="mt-4 flex flex-col gap-2">
-                  <Button size="lg" className="w-full bg-accent hover:bg-accent/90" onClick={handleDownloadReceipt}>
-                    <Download className="mr-2 h-5 w-5" /> Download Receipt
+                
+                <div className="mt-6 space-y-3">
+                  <Button size="lg" className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg" onClick={handleDownloadReceipt}>
+                    <Download className="mr-2 h-5 w-5" /> Download PDF Receipt
                   </Button>
-                  <Button size="lg" variant="outline" className="w-full" onClick={handleBuyAnother}>
+                  <Button size="lg" variant="outline" className="w-full border-2 border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white" onClick={handleBuyAnother}>
                     Buy Another Ticket
                   </Button>
                 </div>
               </div>
             ) : (
-             <Card className="sticky top-24">
-              <CardHeader>
-                <CardTitle className="font-headline text-2xl flex items-center gap-2 uppercase"><Ticket /> Your Order</CardTitle>
-                <CardDescription>Complete your purchase below.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div id="order-summary" className="space-y-2">
+              <Card className="sticky top-24 border-slate-700 shadow-2xl bg-slate-900/90 backdrop-blur-sm overflow-hidden">
+                <div className="bg-gradient-to-r from-slate-700 to-slate-800 p-6 text-white">
+                  <CardTitle className="font-headline text-2xl font-bold flex items-center gap-3">
+                    <div className="p-2 bg-white/20 rounded-lg">
+                      <Ticket className="h-6 w-6" />
+                    </div>
+                    Your Order
+                  </CardTitle>
+                  <CardDescription className="text-slate-200 mt-2">Complete your purchase securely</CardDescription>
+                </div>
+                
+                <CardContent className="p-6 space-y-8">
+                  {/* Order Summary */}
+                  <div className="p-6 bg-slate-800/50 rounded-xl">
                     {selectedSeat ? (
-                      <>
-                        <div className="flex justify-between font-medium">
-                          <span>Seat: {selectedSeat.section}{selectedSeat.row}-{selectedSeat.seat}</span>
-                          <span>£{selectedSeat.price.toFixed(2)}</span>
+                      <div className="space-y-4">
+                        <div className="flex justify-between items-center py-2">
+                          <span className="font-medium text-slate-200">Section {selectedSeat.section}{selectedSeat.row}-{selectedSeat.seat}</span>
+                          <span className="font-bold text-lg">£{selectedSeat.price.toFixed(2)}</span>
                         </div>
-                        <div className="flex justify-between text-muted-foreground text-sm">
-                          <span>Taxes & Fees</span>
+                        <div className="flex justify-between items-center py-2 text-slate-400">
+                          <span>Taxes & Service Fees</span>
                           <span>£{(selectedSeat.price * 0.1).toFixed(2)}</span>
                         </div>
-                        <div className="flex justify-between font-bold text-lg pt-2 border-t mt-2">
-                          <span>Total</span>
-                          <span>£{(selectedSeat.price * 1.1).toFixed(2)}</span>
+                        <Separator className="bg-slate-700" />
+                        <div className="flex justify-between items-center py-2">
+                          <span className="text-xl font-bold">Total</span>
+                          <span className="text-2xl font-bold text-green-400">£{(selectedSeat.price * 1.1).toFixed(2)}</span>
                         </div>
-                      </>
+                      </div>
                     ) : (
-                      <p className="text-center text-muted-foreground">No seats selected</p>
+                      <div className="text-center py-8">
+                        <Ticket className="h-12 w-12 text-slate-500 mx-auto mb-3" />
+                        <p className="text-slate-400 font-medium">Select a seat to continue</p>
+                      </div>
                     )}
-                </div>
-                <Separator />
-                 <div>
-                    <h3 className="font-headline text-lg mb-4 flex items-center gap-2 uppercase"><UserIcon /> Your Information</h3>
-                     <div className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="fullName">Full Name</Label>
-                            <Input id="fullName" placeholder="John M. Doe" value={fullName} onChange={e => setFullName(e.target.value)} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="email">Email Address</Label>
-                            <Input id="email" type="email" placeholder="john.doe@example.com" value={email} onChange={e => setEmail(e.target.value)} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="password">Password</Label>
-                            <Input id="password" type="password" placeholder="********" value={password} onChange={e => setPassword(e.target.value)} />
-                        </div>
+                  </div>
+
+                  {/* User Information */}
+                  <div className="space-y-4">
+                    <h3 className="font-headline text-xl font-bold flex items-center gap-3 text-slate-200">
+                      <UserIcon className="h-5 w-5" />
+                      Your Information
+                    </h3>
+                    <div className="grid gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="fullName" className="font-medium">Full Name</Label>
+                        <Input 
+                          id="fullName" 
+                          placeholder="Enter your full name" 
+                          value={fullName} 
+                          onChange={e => setFullName(e.target.value)}
+                          className="h-12 border-2"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="email" className="font-medium">Email Address</Label>
+                        <Input 
+                          id="email" 
+                          type="email" 
+                          placeholder="Enter your email address" 
+                          value={email} 
+                          onChange={e => setEmail(e.target.value)}
+                          className="h-12 border-2"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="password" className="font-medium">Create Password</Label>
+                        <Input 
+                          id="password" 
+                          type="password" 
+                          placeholder="Create a secure password" 
+                          value={password} 
+                          onChange={e => setPassword(e.target.value)}
+                          className="h-12 border-2"
+                        />
+                      </div>
                     </div>
-                </div>
-                <Separator />
-                <div>
-                    <h3 className="font-headline text-lg mb-4 flex items-center gap-2 uppercase"><CreditCard /> Payment Information</h3>
+                  </div>
+
+                  {/* Payment Information */}
+                  <div className="space-y-4">
+                    <h3 className="font-headline text-xl font-bold flex items-center gap-3 text-slate-200">
+                      <CreditCard className="h-5 w-5" />
+                      Payment Method
+                    </h3>
                     <Tabs value={paymentMethod} onValueChange={setPaymentMethod}>
-                      <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="card">Credit Card</TabsTrigger>
-                        <TabsTrigger value="paypal">PayPal</TabsTrigger>
+                      <TabsList className="grid w-full grid-cols-2 h-12">
+                        <TabsTrigger value="card" className="font-medium">Credit Card</TabsTrigger>
+                        <TabsTrigger value="paypal" className="font-medium">PayPal</TabsTrigger>
                       </TabsList>
-                      <TabsContent value="card" className="mt-4">
-                        <div className="space-y-4">
+                      <TabsContent value="card" className="mt-6">
+                        <div className="grid gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="name">Cardholder Name</Label>
+                            <Input id="name" placeholder="Name as it appears on card" className="h-12 border-2" />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="cardNumber">Card Number</Label>
+                            <Input id="cardNumber" placeholder="1234 5678 9012 3456" className="h-12 border-2" />
+                          </div>
+                          <div className="grid grid-cols-3 gap-3">
                             <div className="space-y-2">
-                                <Label htmlFor="name">Name on Card</Label>
-                                <Input id="name" placeholder="John M. Doe" />
+                              <Label htmlFor="expiry">Expiry</Label>
+                              <Input id="expiry" placeholder="MM/YY" className="h-12 border-2" />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="cardNumber">Card Number</Label>
-                                <Input id="cardNumber" placeholder="1234 5678 9012 3456" />
+                              <Label htmlFor="cvc">CVC</Label>
+                              <Input id="cvc" placeholder="123" className="h-12 border-2" />
                             </div>
-                            <div className="grid grid-cols-3 gap-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="expiry">Expires</Label>
-                                    <Input id="expiry" placeholder="MM/YY" />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="cvc">CVC</Label>
-                                    <Input id="cvc" placeholder="CVC" />
-                                </div>
-                                 <div className="space-y-2">
-                                    <Label htmlFor="zip">ZIP</Label>
-                                    <Input id="zip" placeholder="ZIP" />
-                                </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="zip">ZIP</Label>
+                              <Input id="zip" placeholder="12345" className="h-12 border-2" />
                             </div>
+                          </div>
                         </div>
                       </TabsContent>
-                      <TabsContent value="paypal" className="mt-4">
-                          <div className="text-center p-8 border-dashed border-2 rounded-md">
-                              <p className="text-muted-foreground mb-4">You will be redirected to PayPal to complete your purchase securely.</p>
-                              <Button variant="outline" className="w-full">
-                                  Pay with PayPal
-                              </Button>
-                          </div>
+                      <TabsContent value="paypal" className="mt-6">
+                        <div className="text-center p-8 border-2 border-dashed border-slate-600 rounded-xl bg-slate-800/50">
+                          <div className="text-4xl mb-4">💳</div>
+                          <p className="text-slate-400 mb-4 font-medium">Secure PayPal checkout</p>
+                          <p className="text-sm text-slate-500">You'll be redirected to PayPal to complete your purchase safely</p>
+                        </div>
                       </TabsContent>
                     </Tabs>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button size="lg" className="w-full bg-accent hover:bg-accent/90" onClick={handlePurchase} disabled={!selectedSeat}>
-                  <CheckCircle className="mr-2 h-5 w-5" /> Purchase Tickets
-                </Button>
-              </CardFooter>
-            </Card>
+                  </div>
+                </CardContent>
+                
+                <CardFooter className="p-6 bg-slate-800/50 border-t border-slate-700">
+                  <Button 
+                    size="lg" 
+                    className="w-full h-14 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold text-lg shadow-lg" 
+                    onClick={handlePurchase} 
+                    disabled={!selectedSeat}
+                  >
+                    <CheckCircle className="mr-3 h-6 w-6" /> 
+                    {selectedSeat ? `Purchase for £${(selectedSeat.price * 1.1).toFixed(2)}` : 'Select a Seat First'}
+                  </Button>
+                </CardFooter>
+              </Card>
             )}
           </div>
         </div>
