@@ -8,8 +8,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, ArrowLeft } from 'lucide-react';
 import { Logo } from '@/components/logo';
+import Link from 'next/link';
 
 export default function AdminLoginPage() {
     const router = useRouter();
@@ -26,6 +27,7 @@ export default function AdminLoginPage() {
         const user = users.find(u => u.email === email && u.password === password);
 
         if (user && user.type === 'admin') {
+            localStorage.setItem('currentUser', JSON.stringify(user));
             setCurrentUser(user);
             router.push('/admin');
         } else {
@@ -34,7 +36,8 @@ export default function AdminLoginPage() {
     };
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
+        // Added fixed positioning and z-index to ensure it's on top and takes full screen
+        <div className="fixed inset-0 z-50 flex min-h-screen flex-col items-center justify-center bg-background p-4">
             <div className="mb-8">
                 <Logo />
             </div>
@@ -63,9 +66,15 @@ export default function AdminLoginPage() {
                             <Input id="password" name="password" type="password" required defaultValue="admin"/>
                         </div>
                     </CardContent>
-                    <CardFooter>
+                    <CardFooter className="flex flex-col gap-2 sm:flex-row-reverse">
                         <Button type="submit" form="login-form" className="w-full">
                             Login
+                        </Button>
+                         <Button asChild variant="outline" className="w-full">
+                            <Link href="/">
+                                <ArrowLeft className="mr-2 h-4 w-4" />
+                                Back to Home
+                            </Link>
                         </Button>
                     </CardFooter>
                 </form>
