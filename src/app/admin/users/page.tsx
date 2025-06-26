@@ -31,53 +31,46 @@ export default function AdminUsersPage() {
   };
   
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex-shrink-0 p-8 pt-6 pb-4">
-        <div className="flex items-center justify-between">
-          <div>
-              <h2 className="text-3xl font-bold tracking-tight font-headline uppercase">User Management</h2>
-              <p className="text-muted-foreground">View all sellers and buyers on the platform.</p>
-          </div>
-          <Button onClick={handleExport}>
-              <Download className="mr-2 h-4 w-4" />
-              Export CSV
-          </Button>
-        </div>
+    <div className="p-8 space-y-4">
+      <div className="flex items-center justify-end">
+        <Button onClick={handleExport}>
+            <Download className="mr-2 h-4 w-4" />
+            Export CSV
+        </Button>
       </div>
-      <div className="flex-1 space-y-4 overflow-y-auto px-8 pb-8">
-        <Card>
-          <CardContent className="mt-6">
-              <Table>
-                  <TableHeader>
-                  <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Password</TableHead>
-                      <TableHead>User Type</TableHead>
-                      <TableHead>User ID</TableHead>
-                      <TableHead>Tickets Bought</TableHead>
-                  </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                  {users.map(user => (
-                      <TableRow key={user.id}>
-                      <TableCell className="font-medium">{user.name}</TableCell>
-                      <TableCell>{user.email}</TableCell>
-                      <TableCell>{user.password}</TableCell>
-                      <TableCell>
-                          <Badge variant={user.type === 'seller' ? 'secondary' : user.type === 'buyer' ? 'outline' : 'default'}>
-                            {user.type}
-                          </Badge>
-                      </TableCell>
-                      <TableCell>{user.id}</TableCell>
-                      <TableCell>{user.purchasedTickets?.length ?? 0}</TableCell>
-                      </TableRow>
-                  ))}
-                  </TableBody>
-              </Table>
-          </CardContent>
-        </Card>
-      </div>
+      
+      <Card>
+        <CardContent className="mt-6">
+            <Table>
+                <TableHeader>
+                <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Password</TableHead>
+                    <TableHead>User Type</TableHead>
+                    <TableHead>User ID</TableHead>
+                    <TableHead>Tickets Bought</TableHead>
+                </TableRow>
+                </TableHeader>
+                <TableBody>
+                {users.map(user => (
+                    <TableRow key={user.id}>
+                    <TableCell className="font-medium">{user.name}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.password}</TableCell>
+                    <TableCell>
+                        <Badge variant={user.type === 'seller' ? 'secondary' : user.type === 'buyer' ? 'outline' : 'default'}>
+                          {user.type}
+                        </Badge>
+                    </TableCell>
+                    <TableCell>{user.id}</TableCell>
+                    <TableCell>{user.purchasedTickets?.length ?? 0}</TableCell>
+                    </TableRow>
+                ))}
+                </TableBody>
+            </Table>
+        </CardContent>
+      </Card>
     </div>
   );
 }
